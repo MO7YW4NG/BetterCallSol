@@ -1,6 +1,7 @@
 .nuxt
 .output
 dist
+.wrangler
 node_modules
 .env
 __pycache__

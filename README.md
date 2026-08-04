@@ -23,6 +23,18 @@ The `Refresh Solution index` workflow runs every Monday at 03:17 UTC and can als
 
 Workers AI quota errors defer remaining notebooks. Unverifiable team membership and special awards without structured Kaggle evidence are omitted rather than guessed.
 
+## Cloudflare Workers deployment
+
+This is a client-rendered Nuxt SPA. `wrangler.jsonc` explicitly deploys `.output/public` as Workers Static Assets and routes unknown paths back to `index.html`; it does not configure an SSR entrypoint.
+
+For Cloudflare Workers Builds, use:
+
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
+- Root directory: `/`
+
+For a local deploy, authenticate with `npx wrangler login` and run `npm run deploy`. The deploy token needs Account → Workers Scripts → Edit; the same token can retain Workers AI read access for the weekly sync.
+
 ## Checks
 
 ```bash

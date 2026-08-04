@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt generate",
     "dev": "nuxt dev",
+    "deploy": "npm run build && wrangler deploy",
     "test": "node --test tests/filter-solutions.test.mjs && python scripts/sync.py --self-check",
     "typecheck": "nuxt typecheck"
   },
@@ -13,6 +14,7 @@
   },
   "devDependencies": {
     "typescript": "^5.9.2",
-    "vue-tsc": "^3.0.6"
+    "vue-tsc": "^3.0.6",
+    "wrangler": "^4.118.0"
   }
 }
