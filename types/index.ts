@@ -49,6 +49,7 @@ export interface SolutionIndex {
     coverageMonths: number
     demo: boolean
     source: string
+    competitionNotebookCache?: Record<string, { sampleCount: number; sampleHash: string }>
   }
   solutions: Solution[]
 }
