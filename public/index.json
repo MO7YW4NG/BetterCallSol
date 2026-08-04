@@ -1,18 +1,23 @@
 {
   "meta": {
-    "generatedAt": "2026-08-04T00:00:00Z",
+    "generatedAt": "2026-08-04T06:22:44.533312Z",
     "evidenceThrough": "2026-08-04",
     "coverageMonths": 18,
-    "demo": true,
-    "source": "One verified Kaggle seed record plus illustrative cards — run the sync workflow for the live index"
+    "demo": false,
+    "source": "Kaggle CLI and verified notebook evidence"
   },
   "solutions": [
     {
       "id": "llms-you-cant-please-them-all-shivamreturns-7th",
       "title": "Three-family adversarial prompt attack",
       "summary": "The 7th-place Solution partitions essays across three targeted prompt attacks, repeats a selected batch, and uses seeded swaps to stabilize the final private score.",
-      "task": { "primary": "Generation", "secondary": [] },
-      "modalities": ["Text"],
+      "task": {
+        "primary": "Generation",
+        "secondary": []
+      },
+      "modalities": [
+        "Text"
+      ],
       "metric": "Competition score",
       "competition": {
         "name": "LLMs - You Can't Please Them All",
@@ -20,172 +25,83 @@
         "url": "https://www.kaggle.com/competitions/llms-you-cant-please-them-all",
         "endDate": "2025-03-03"
       },
-      "result": { "rank": 7, "teams": 1692, "percentile": 0.41, "award": "Gold medal" },
+      "result": {
+        "rank": 7,
+        "teams": 1692,
+        "percentile": 0.41,
+        "award": "Gold medal"
+      },
       "status": "emerging",
-      "methods": ["chat-template injection", "random-word essays", "attack batching", "seeded swaps"],
+      "methods": [
+        "chat-template injection",
+        "random-word essays",
+        "attack batching",
+        "seeded swaps"
+      ],
       "pipeline": {
         "validation": [],
         "preprocessing": [
-          { "text": "Neutral random-word sequences and topic-conditioned essay templates form the attack inputs.", "cellRefs": [6, 8, 20] }
+          {
+            "text": "Neutral random-word sequences and topic-conditioned essay templates form the attack inputs.",
+            "cellRefs": [
+              6,
+              8,
+              20
+            ]
+          }
         ],
         "model": [],
         "training": [],
         "inference": [
-          { "text": "Rows are partitioned across three prompt-attack families aimed at different judge behaviors.", "cellRefs": [11, 15] }
+          {
+            "text": "Rows are partitioned across three prompt-attack families aimed at different judge behaviors.",
+            "cellRefs": [
+              11,
+              15
+            ]
+          }
         ],
         "postprocessing": [
-          { "text": "A selected 18-row batch is repeated, then specific essays are swapped before export.", "cellRefs": [16, 17, 19, 22] }
+          {
+            "text": "A selected 18-row batch is repeated, then specific essays are swapped before export.",
+            "cellRefs": [
+              16,
+              17,
+              19,
+              22
+            ]
+          }
         ],
         "ensembling": [
-          { "text": "Three attack families are distributed across the submission rather than relying on one exploit.", "cellRefs": [11, 15] }
+          {
+            "text": "Three attack families are distributed across the submission rather than relying on one exploit.",
+            "cellRefs": [
+              11,
+              15
+            ]
+          }
         ]
       },
-      "evidence": [{
-        "owner": "shivamreturns",
-        "url": "https://www.kaggle.com/code/shivamreturns/fork-of-fork-of-fork-of-fork-of-fork-of-for-50a4f3",
-        "version": 1,
-        "cellRefs": [6, 8, 11, 15, 16, 17, 19, 20, 22],
-        "verified": true
-      }],
+      "evidence": [
+        {
+          "owner": "shivamreturns",
+          "url": "https://www.kaggle.com/code/shivamreturns/fork-of-fork-of-fork-of-fork-of-fork-of-for-50a4f3",
+          "version": 1,
+          "cellRefs": [
+            6,
+            8,
+            11,
+            15,
+            16,
+            17,
+            19,
+            20,
+            22
+          ],
+          "verified": true
+        }
+      ],
       "sourceHash": "2afc8fd6179832fbe2d37badeba37371255284674af10ff6f9f55ab8c28012db"
-    },
-    {
-      "id": "demo-two-stage-detector",
-      "title": "Two-stage detector with fold ensemble",
-      "summary": "Illustrative object-detection pipeline combining scale-aware augmentation, fold models, test-time augmentation, and weighted box fusion.",
-      "task": { "primary": "Object Detection", "secondary": ["Image Classification"] },
-      "modalities": ["Image"],
-      "metric": "mAP",
-      "competition": { "name": "Demo Vision Challenge", "slug": "demo-vision", "url": "", "endDate": "2026-07-14" },
-      "result": { "rank": 8, "teams": 842, "percentile": 1.0, "award": null },
-      "status": "frontier",
-      "methods": ["FPN", "multi-scale", "TTA", "WBF"],
-      "pipeline": {
-        "validation": [{ "text": "Stratified group folds keep related images together.", "cellRefs": [4] }],
-        "preprocessing": [{ "text": "Scale-aware crops and color augmentation are applied during training.", "cellRefs": [7, 8] }],
-        "model": [{ "text": "A feature-pyramid detector is trained per fold.", "cellRefs": [12] }],
-        "training": [{ "text": "Fold checkpoints are selected by validation mAP.", "cellRefs": [15] }],
-        "inference": [{ "text": "Multi-scale and flip test-time augmentation produce candidate boxes.", "cellRefs": [18] }],
-        "postprocessing": [{ "text": "Weighted box fusion combines overlapping predictions.", "cellRefs": [20] }],
-        "ensembling": [{ "text": "Five fold models contribute equally.", "cellRefs": [21] }]
-      },
-      "evidence": [{ "owner": "demo-practitioner", "url": "", "version": 3, "cellRefs": [4, 7, 8, 12, 15, 18, 20, 21], "verified": true }],
-      "sourceHash": "demo-object-detection"
-    },
-    {
-      "id": "demo-mask-transformer",
-      "title": "Mask-aware transformer stack",
-      "summary": "Illustrative segmentation approach using tiled training, boundary-aware loss, overlapping inference, and connected-component cleanup.",
-      "task": { "primary": "Semantic Segmentation", "secondary": [] },
-      "modalities": ["Image"],
-      "metric": "Dice",
-      "competition": { "name": "Demo Segmentation Challenge", "slug": "demo-segmentation", "url": "", "endDate": "2026-06-28" },
-      "result": { "rank": 17, "teams": 510, "percentile": 3.3, "award": null },
-      "status": "frontier",
-      "methods": ["Swin", "Dice loss", "tiling", "morphology"],
-      "pipeline": {
-        "validation": [{ "text": "Patient-level folds prevent cross-fold leakage.", "cellRefs": [3] }],
-        "preprocessing": [{ "text": "Large images are sampled as overlapping tiles.", "cellRefs": [6] }],
-        "model": [{ "text": "A hierarchical transformer encoder feeds a mask decoder.", "cellRefs": [11] }],
-        "training": [{ "text": "Dice and boundary losses are optimized together.", "cellRefs": [14] }],
-        "inference": [{ "text": "Overlapping tile logits are averaged.", "cellRefs": [19] }],
-        "postprocessing": [{ "text": "Small disconnected regions are removed.", "cellRefs": [22] }],
-        "ensembling": []
-      },
-      "evidence": [{ "owner": "demo-practitioner", "url": "", "version": 5, "cellRefs": [3, 6, 11, 14, 19, 22], "verified": true }],
-      "sourceHash": "demo-segmentation"
-    },
-    {
-      "id": "demo-leakage-safe-gbdt",
-      "title": "Leakage-safe boosting ensemble",
-      "summary": "Illustrative tabular solution centered on time-aware validation, conservative target encoding, and rank-averaged tree models.",
-      "task": { "primary": "Classification", "secondary": [] },
-      "modalities": ["Tabular"],
-      "metric": "ROC AUC",
-      "competition": { "name": "Demo Tabular Challenge", "slug": "demo-tabular", "url": "", "endDate": "2026-05-19" },
-      "result": { "rank": 31, "teams": 1240, "percentile": 2.5, "award": null },
-      "status": "proven",
-      "methods": ["LightGBM", "CatBoost", "OOF encoding", "rank average"],
-      "pipeline": {
-        "validation": [{ "text": "Purged time folds match the hidden evaluation window.", "cellRefs": [5] }],
-        "preprocessing": [{ "text": "Target encodings are fitted out of fold.", "cellRefs": [9] }],
-        "model": [{ "text": "Gradient-boosted tree families provide complementary predictions.", "cellRefs": [13] }],
-        "training": [{ "text": "Early stopping uses the matching fold only.", "cellRefs": [16] }],
-        "inference": [{ "text": "Fold predictions are averaged per model family.", "cellRefs": [20] }],
-        "postprocessing": [{ "text": "Predictions are converted to within-model ranks.", "cellRefs": [23] }],
-        "ensembling": [{ "text": "Model-family ranks are averaged.", "cellRefs": [24] }]
-      },
-      "evidence": [{ "owner": "demo-practitioner", "url": "", "version": 2, "cellRefs": [5, 9, 13, 16, 20, 23, 24], "verified": true }],
-      "sourceHash": "demo-tabular"
-    },
-    {
-      "id": "demo-audio-conformer",
-      "title": "Spectrogram conformer with crop voting",
-      "summary": "Illustrative audio-classification pipeline using log-mel inputs, time-frequency masking, conformer blocks, and crop-level voting.",
-      "task": { "primary": "Classification", "secondary": [] },
-      "modalities": ["Audio"],
-      "metric": "Macro F1",
-      "competition": { "name": "Demo Audio Challenge", "slug": "demo-audio", "url": "", "endDate": "2026-04-04" },
-      "result": { "rank": 22, "teams": 390, "percentile": 5.6, "award": null },
-      "status": "emerging",
-      "methods": ["log-mel", "SpecAugment", "Conformer", "crop voting"],
-      "pipeline": {
-        "validation": [{ "text": "Recording groups remain within a single fold.", "cellRefs": [4] }],
-        "preprocessing": [{ "text": "Waveforms become normalized log-mel spectrograms.", "cellRefs": [8] }],
-        "model": [{ "text": "Conformer blocks aggregate local and global acoustic context.", "cellRefs": [12] }],
-        "training": [{ "text": "Time and frequency masks regularize training crops.", "cellRefs": [15] }],
-        "inference": [{ "text": "Multiple temporal crops are evaluated per recording.", "cellRefs": [18] }],
-        "postprocessing": [{ "text": "Crop probabilities are averaged before thresholding.", "cellRefs": [20] }],
-        "ensembling": []
-      },
-      "evidence": [{ "owner": "demo-practitioner", "url": "", "version": 4, "cellRefs": [4, 8, 12, 15, 18, 20], "verified": true }],
-      "sourceHash": "demo-audio"
-    },
-    {
-      "id": "demo-temporal-fusion",
-      "title": "Temporal fusion with residual blend",
-      "summary": "Illustrative forecasting solution combining lag features, a neural temporal model, a tree baseline, and horizon-specific blending.",
-      "task": { "primary": "Forecasting", "secondary": ["Regression"] },
-      "modalities": ["Time Series", "Tabular"],
-      "metric": "RMSE",
-      "competition": { "name": "Demo Forecasting Challenge", "slug": "demo-forecasting", "url": "", "endDate": "2026-02-21" },
-      "result": { "rank": 14, "teams": 278, "percentile": 5.0, "award": null },
-      "status": "proven",
-      "methods": ["lag features", "TFT", "LightGBM", "horizon blend"],
-      "pipeline": {
-        "validation": [{ "text": "Rolling-origin folds preserve forecast chronology.", "cellRefs": [5] }],
-        "preprocessing": [{ "text": "Lag, rolling, and calendar features are generated causally.", "cellRefs": [9] }],
-        "model": [{ "text": "A temporal fusion model is paired with a boosted-tree residual model.", "cellRefs": [13] }],
-        "training": [{ "text": "Models are fitted independently at each origin.", "cellRefs": [16] }],
-        "inference": [{ "text": "Recursive forecasts update permissible lag features.", "cellRefs": [19] }],
-        "postprocessing": [{ "text": "Outputs are clipped to the observed physical range.", "cellRefs": [21] }],
-        "ensembling": [{ "text": "Blend weights vary by forecast horizon.", "cellRefs": [23] }]
-      },
-      "evidence": [{ "owner": "demo-practitioner", "url": "", "version": 1, "cellRefs": [5, 9, 13, 16, 19, 21, 23], "verified": true }],
-      "sourceHash": "demo-forecasting"
-    },
-    {
-      "id": "demo-dual-encoder-reranker",
-      "title": "Dual encoder with cross-encoder rerank",
-      "summary": "Illustrative ranking solution using hard-negative mining, dual-encoder retrieval, cross-encoder reranking, and reciprocal-rank fusion.",
-      "task": { "primary": "Ranking", "secondary": ["Classification"] },
-      "modalities": ["Text"],
-      "metric": "NDCG",
-      "competition": { "name": "Demo Retrieval Challenge", "slug": "demo-retrieval", "url": "", "endDate": "2025-12-12" },
-      "result": { "rank": 9, "teams": 184, "percentile": 4.9, "award": null },
-      "status": "emerging",
-      "methods": ["dual encoder", "hard negatives", "cross encoder", "RRF"],
-      "pipeline": {
-        "validation": [{ "text": "Query groups do not cross validation folds.", "cellRefs": [4] }],
-        "preprocessing": [{ "text": "Near-duplicate documents are grouped before splitting.", "cellRefs": [7] }],
-        "model": [{ "text": "Dual-encoder retrieval feeds a cross-encoder reranker.", "cellRefs": [12] }],
-        "training": [{ "text": "Hard negatives are refreshed between training rounds.", "cellRefs": [15] }],
-        "inference": [{ "text": "The reranker scores the top retrieved candidates.", "cellRefs": [18] }],
-        "postprocessing": [{ "text": "Duplicate document identifiers are collapsed.", "cellRefs": [20] }],
-        "ensembling": [{ "text": "Reciprocal-rank fusion combines retrieval variants.", "cellRefs": [22] }]
-      },
-      "evidence": [{ "owner": "demo-practitioner", "url": "", "version": 2, "cellRefs": [4, 7, 12, 15, 18, 20, 22], "verified": true }],
-      "sourceHash": "demo-retrieval"
     }
   ]
 }
