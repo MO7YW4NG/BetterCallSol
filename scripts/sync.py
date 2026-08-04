@@ -48,6 +48,7 @@ TASKS = (
 MODALITIES = ("Tabular", "Image", "Text", "Audio", "Video", "Time Series", "Graph", "Multimodal")
 TARGET_SOLUTIONS = 30
 MAX_NOTEBOOK_PAGES = 3
+MAX_SOLUTIONS_PER_COMPETITION = 6
 
 
 def run_kaggle(*args: str, cwd: Path | None = None) -> str:
@@ -522,11 +523,17 @@ def load_existing() -> dict[str, Any]:
 
 
 def reusable_existing(existing: dict[str, Any], cutoff: str) -> dict[str, dict[str, Any]]:
-    return {
-        item["id"]: item for item in existing.get("solutions", [])
-        if item["competition"]["endDate"] >= cutoff
-        and not str(item.get("sourceHash", "")).startswith("demo-")
-    }
+    kept: dict[str, dict[str, Any]] = {}
+    counts: dict[str, int] = defaultdict(int)
+    for item in existing.get("solutions", []):
+        if item["competition"]["endDate"] < cutoff or str(item.get("sourceHash", "")).startswith("demo-"):
+            continue
+        competition = item["competition"]["slug"]
+        if counts[competition] >= MAX_SOLUTIONS_PER_COMPETITION:
+            continue
+        kept[item["id"]] = item
+        counts[competition] += 1
+    return kept
 
 
 def sync() -> None:
@@ -536,8 +543,8 @@ def sync() -> None:
 
     cutoff = cutoff_date()
     existing = load_existing()
-    existing_by_hash = {item["sourceHash"]: item for item in existing.get("solutions", []) if item.get("sourceHash")}
     solutions = reusable_existing(existing, cutoff)
+    existing_by_hash = {item["sourceHash"]: item for item in solutions.values() if item.get("sourceHash")}
     existing_by_ref = {
         source_ref: item for item in solutions.values()
         if (source_ref := solution_source_ref(item))
@@ -581,6 +588,8 @@ def sync() -> None:
             if cached and revision and cached.get("sourceRevision") == revision:
                 solutions[cached["id"]] = cached
                 stats["cached"] += 1
+                continue
+            if sum(item["competition"]["slug"] == competition["slug"] for item in solutions.values()) >= MAX_SOLUTIONS_PER_COMPETITION:
                 continue
             try:
                 with tempfile.TemporaryDirectory() as directory:
@@ -687,8 +696,8 @@ def self_check() -> None:
     assert all(item["status"] == "frontier" for item in solutions)
     seeded = {
         "solutions": [
-            {"id": "verified", "sourceHash": "abc", "competition": {"endDate": "2025-03-03"}},
-            {"id": "demo", "sourceHash": "demo-card", "competition": {"endDate": "2026-01-01"}},
+            {"id": "verified", "sourceHash": "abc", "competition": {"slug": "a", "endDate": "2025-03-03"}},
+            {"id": "demo", "sourceHash": "demo-card", "competition": {"slug": "b", "endDate": "2026-01-01"}},
         ]
     }
     assert set(reusable_existing(seeded, "2025-02-01")) == {"verified"}
