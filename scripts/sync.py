@@ -329,6 +329,14 @@ def load_existing() -> dict[str, Any]:
     return json.loads(INDEX_PATH.read_text(encoding="utf-8"))
 
 
+def reusable_existing(existing: dict[str, Any], cutoff: str) -> dict[str, dict[str, Any]]:
+    return {
+        item["id"]: item for item in existing.get("solutions", [])
+        if item["competition"]["endDate"] >= cutoff
+        and not str(item.get("sourceHash", "")).startswith("demo-")
+    }
+
+
 def sync() -> None:
     for required in ("KAGGLE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"):
         if not os.getenv(required):
@@ -337,10 +345,7 @@ def sync() -> None:
     cutoff = cutoff_date()
     existing = load_existing()
     existing_by_hash = {item["sourceHash"]: item for item in existing.get("solutions", []) if item.get("sourceHash")}
-    solutions = {
-        item["id"]: item for item in existing.get("solutions", [])
-        if not existing.get("meta", {}).get("demo") and item["competition"]["endDate"] >= cutoff
-    }
+    solutions = reusable_existing(existing, cutoff)
 
     for competition in list_competitions(cutoff):
         print(f"Scanning {competition['slug']}")
@@ -411,6 +416,13 @@ def self_check() -> None:
     ]
     assign_statuses(solutions)
     assert all(item["status"] == "frontier" for item in solutions)
+    seeded = {
+        "solutions": [
+            {"id": "verified", "sourceHash": "abc", "competition": {"endDate": "2025-03-03"}},
+            {"id": "demo", "sourceHash": "demo-card", "competition": {"endDate": "2026-01-01"}},
+        ]
+    }
+    assert set(reusable_existing(seeded, "2025-02-01")) == {"verified"}
     print("sync self-check passed")
 
 
