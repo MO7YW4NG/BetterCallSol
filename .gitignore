@@ -1,0 +1,13 @@
+.nuxt
+.output
+dist
+node_modules
+.env
+__pycache__
+*.pyc
+.agents/*
+.impeccable/*
+
+CONTEXT.md
+PRODUCT.md
+DESIGN.md
