@@ -17,6 +17,7 @@ import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
+import zipfile
 from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
@@ -168,12 +169,27 @@ def leaderboard(competition: str) -> list[dict[str, str]]:
     with tempfile.TemporaryDirectory() as directory:
         path = Path(directory)
         run_kaggle("competitions", "leaderboard", competition, "-d", "-p", str(path), "-q")
-        files = list(path.glob("*.csv"))
-        if not files:
-            return []
+        return read_leaderboard(path)
+
+
+def read_leaderboard(path: Path) -> list[dict[str, str]]:
+    files = list(path.glob("*.csv"))
+    if files:
         with files[0].open(encoding="utf-8-sig", newline="") as handle:
-            rows = list(csv.DictReader(handle))
-    return rows
+            return list(csv.DictReader(handle))
+    archives = list(path.glob("*.zip"))
+    if not archives:
+        return []
+    with zipfile.ZipFile(archives[0]) as archive:
+        names = sorted(
+            (name for name in archive.namelist() if name.lower().endswith(".csv")),
+            key=lambda name: ("leaderboard" not in name.lower(), name),
+        )
+        if not names:
+            return []
+        with archive.open(names[0]) as raw:
+            handle = io.TextIOWrapper(raw, encoding="utf-8-sig", newline="")
+            return list(csv.DictReader(handle))
 
 
 def ranked_teams(rows: list[dict[str, str]]) -> dict[str, dict[str, Any]]:
@@ -487,6 +503,11 @@ def self_check() -> None:
     assert kernel_reference("https://www.kaggle.com/code/user/notebook") == "user/notebook"
     assert notebook_revision({"dateUpdated": "2026-08-04T00:00:00Z", "versionNumber": "3"}) == "2026-08-04T00:00:00Z|3"
     assert solution_source_ref({"evidence": [{"url": "https://www.kaggle.com/code/user/notebook"}]}) == "user/notebook"
+    with tempfile.TemporaryDirectory() as directory:
+        archive_path = Path(directory) / "leaderboard.zip"
+        with zipfile.ZipFile(archive_path, "w") as archive:
+            archive.writestr("leaderboard.csv", "TeamName,Score\nuser,1.0\n")
+        assert read_leaderboard(Path(directory))[0]["TeamName"] == "user"
     rows = [{"rank": str(rank), "teamName": f"user-{rank}"} for rank in range(1, 21)]
     assert set(ranked_teams(rows)) == {"user1", "user2"}
     assert set(ranked_teams([{"teamName": f"user-{rank}"} for rank in range(1, 21)])) == {"user1", "user2"}
