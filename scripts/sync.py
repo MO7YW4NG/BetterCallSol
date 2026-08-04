@@ -45,6 +45,8 @@ TASKS = (
     "Generation",
 )
 MODALITIES = ("Tabular", "Image", "Text", "Audio", "Video", "Time Series", "Graph", "Multimodal")
+TARGET_SOLUTIONS = 30
+MAX_NOTEBOOK_PAGES = 3
 
 
 def run_kaggle(*args: str, cwd: Path | None = None) -> str:
@@ -113,6 +115,35 @@ def competition_slug(value: str) -> str:
     return value.rstrip("/").rsplit("/", 1)[-1]
 
 
+def kernel_reference(value: str) -> str:
+    value = value.strip()
+    parsed = urllib.parse.urlparse(value)
+    if parsed.scheme and parsed.netloc:
+        parts = [part for part in parsed.path.split("/") if part]
+        for marker in ("code", "kernels"):
+            if marker in parts:
+                index = parts.index(marker)
+                return "/".join(parts[index + 1:])
+    return value.strip("/")
+
+
+def notebook_revision(row: dict[str, str]) -> str:
+    updated = field(row, "dateUpdated", "lastUpdated", "lastModified", "updatedAt", "lastRunTime")
+    version = field(row, "versionNumber", "currentVersionNumber", "version")
+    return "|".join(value for value in (updated, version) if value)
+
+
+def solution_source_ref(solution: dict[str, Any]) -> str:
+    source_ref = str(solution.get("sourceRef", "")).strip()
+    if source_ref:
+        return source_ref
+    for evidence in solution.get("evidence", []):
+        url = str(evidence.get("url", ""))
+        if "/code/" in url:
+            return url.split("/code/", 1)[1].strip("/")
+    return ""
+
+
 def slugify(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
@@ -146,11 +177,12 @@ def leaderboard(competition: str) -> list[dict[str, str]]:
 
 
 def ranked_teams(rows: list[dict[str, str]]) -> dict[str, dict[str, Any]]:
-    valid = [row for row in rows if field(row, "rank", "privateRank").isdigit()]
+    valid = [row for row in rows if field(row, "teamName", "team", "userName", "username")]
     limit = max(1, math.ceil(len(valid) * 0.10))
     result: dict[str, dict[str, Any]] = {}
-    for row in valid:
-        rank = int(field(row, "rank", "privateRank"))
+    for index, row in enumerate(valid, start=1):
+        raw_rank = field(row, "rank", "privateRank", "publicRank", "position")
+        rank = int(raw_rank) if raw_rank.isdigit() else index
         if rank > limit:
             continue
         team_name = field(row, "teamName", "team", "userName", "username")
@@ -166,7 +198,7 @@ def ranked_teams(rows: list[dict[str, str]]) -> dict[str, dict[str, Any]]:
 
 def list_notebooks(competition: str) -> list[dict[str, str]]:
     notebooks: list[dict[str, str]] = []
-    for page in range(1, 11):
+    for page in range(1, MAX_NOTEBOOK_PAGES + 1):
         rows = csv_rows(run_kaggle(
             "kernels", "list", "--competition", competition, "--kernel-type", "notebook",
             "--sort-by", "voteCount", "--page-size", "100", "-p", str(page), "-v",
@@ -291,14 +323,15 @@ def validate_extraction(value: Any, cell_indexes: set[int]) -> dict[str, Any]:
 
 
 def notebook_owner(reference: str) -> str:
+    reference = kernel_reference(reference)
     return reference.split("/", 1)[0] if "/" in reference else ""
 
 
 def make_solution(
     competition: dict[str, str], reference: str, rank: dict[str, Any], source_hash: str,
-    extracted: dict[str, Any], cell_indexes: set[int],
+    extracted: dict[str, Any], cell_indexes: set[int], source_revision: str,
 ) -> dict[str, Any]:
-    return {
+    solution = {
         "id": slugify(f"{competition['slug']}-{reference}"),
         "title": extracted["title"],
         "summary": extracted["summary"],
@@ -321,7 +354,11 @@ def make_solution(
             "verified": True,
         }],
         "sourceHash": source_hash,
+        "sourceRef": reference,
     }
+    if source_revision:
+        solution["sourceRevision"] = source_revision
+    return solution
 
 
 def assign_statuses(solutions: list[dict[str, Any]]) -> None:
@@ -358,8 +395,15 @@ def sync() -> None:
     existing = load_existing()
     existing_by_hash = {item["sourceHash"]: item for item in existing.get("solutions", []) if item.get("sourceHash")}
     solutions = reusable_existing(existing, cutoff)
+    existing_by_ref = {
+        source_ref: item for item in solutions.values()
+        if (source_ref := solution_source_ref(item))
+    }
+    stats = {"cached": 0, "pulled": 0, "published": 0}
 
     for competition in list_competitions(cutoff):
+        if len(solutions) >= TARGET_SOLUTIONS:
+            break
         print(f"Scanning {competition['slug']}")
         try:
             teams = ranked_teams(leaderboard(competition["slug"]))
@@ -369,22 +413,41 @@ def sync() -> None:
             continue
 
         for notebook in notebooks:
-            reference = field(notebook, "ref", "reference")
+            reference = kernel_reference(field(notebook, "ref", "reference"))
+            revision = notebook_revision(notebook)
             owner_key = normalize_identity(notebook_owner(reference))
             # ponytail: exact identity matching is intentionally conservative; add an official team-member feed when Kaggle exposes one.
             if not reference or owner_key not in teams:
                 continue
+            cached = existing_by_ref.get(reference)
+            if cached and revision and cached.get("sourceRevision") == revision:
+                solutions[cached["id"]] = cached
+                stats["cached"] += 1
+                continue
             try:
                 with tempfile.TemporaryDirectory() as directory:
                     path, raw = pull_notebook(reference, Path(directory))
+                    stats["pulled"] += 1
                     source_hash = hashlib.sha256(raw).hexdigest()
                     if source_hash in existing_by_hash:
-                        solutions[existing_by_hash[source_hash]["id"]] = existing_by_hash[source_hash]
+                        cached = dict(existing_by_hash[source_hash])
+                        cached["sourceRef"] = reference
+                        if revision:
+                            cached["sourceRevision"] = revision
+                        solutions[cached["id"]] = cached
+                        existing_by_ref[reference] = cached
+                        existing_by_hash[source_hash] = cached
+                        stats["cached"] += 1
                         continue
                     cells, indexes = notebook_cells(path)
                     extracted = validate_extraction(call_workers_ai(cells), indexes)
-                solution = make_solution(competition, reference, teams[owner_key], source_hash, extracted, indexes)
+                solution = make_solution(
+                    competition, reference, teams[owner_key], source_hash, extracted, indexes, revision
+                )
                 solutions[solution["id"]] = solution
+                existing_by_ref[reference] = solution
+                existing_by_hash[source_hash] = solution
+                stats["published"] += 1
                 print(f"  published {reference}")
             except urllib.error.HTTPError as error:
                 if error.code in (400, 402, 429):
@@ -393,6 +456,8 @@ def sync() -> None:
                 print(f"  quarantined {reference}: Workers AI HTTP {error.code}", file=sys.stderr)
             except (json.JSONDecodeError, OSError, RuntimeError, subprocess.CalledProcessError, ValueError) as error:
                 print(f"  quarantined {reference}: {error}", file=sys.stderr)
+            if len(solutions) >= TARGET_SOLUTIONS:
+                break
 
     published = list(solutions.values())
     assign_statuses(published)
@@ -409,14 +474,22 @@ def sync() -> None:
         "solutions": published,
     }
     INDEX_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(
+        f"Sync complete: {len(published)} solutions; "
+        f"{stats['published']} published, {stats['cached']} cached, {stats['pulled']} notebooks pulled."
+    )
 
 
 def self_check() -> None:
     assert normalize_identity("Team_A-1") == "teama1"
     assert competition_slug("https://www.kaggle.com/competitions/example-slug") == "example-slug"
     assert competition_slug("example-slug") == "example-slug"
+    assert kernel_reference("https://www.kaggle.com/code/user/notebook") == "user/notebook"
+    assert notebook_revision({"dateUpdated": "2026-08-04T00:00:00Z", "versionNumber": "3"}) == "2026-08-04T00:00:00Z|3"
+    assert solution_source_ref({"evidence": [{"url": "https://www.kaggle.com/code/user/notebook"}]}) == "user/notebook"
     rows = [{"rank": str(rank), "teamName": f"user-{rank}"} for rank in range(1, 21)]
     assert set(ranked_teams(rows)) == {"user1", "user2"}
+    assert set(ranked_teams([{"teamName": f"user-{rank}"} for rank in range(1, 21)])) == {"user1", "user2"}
     cells = {1, 3}
     value = {
         "title": "A", "summary": "B", "primaryTask": "Classification", "secondaryTasks": [],

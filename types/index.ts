@@ -38,6 +38,8 @@ export interface Solution {
   pipeline: Record<PipelineStage, MethodClaim[]>
   evidence: NotebookEvidence[]
   sourceHash: string
+  sourceRef?: string
+  sourceRevision?: string
 }
 
 export interface SolutionIndex {
