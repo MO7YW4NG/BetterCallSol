@@ -154,7 +154,15 @@ def list_competitions(cutoff: str) -> list[dict[str, str]]:
     today = datetime.now(UTC).date().isoformat()
     for category in CATEGORIES:
         for page in range(1, 11):
-            rows = csv_rows(run_kaggle("competitions", "list", "--category", category, "--sort-by", "latestDeadline", "-p", str(page), "-v"))
+            try:
+                raw = run_kaggle(
+                    "competitions", "list", "--category", category,
+                    "--sort-by", "latestDeadline", "-p", str(page), "-v",
+                )
+            except subprocess.CalledProcessError as error:
+                print(f"  skipped competition page {category}/{page}: {error}", file=sys.stderr)
+                break
+            rows = csv_rows(raw)
             if not rows:
                 break
             for row in rows:
