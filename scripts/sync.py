@@ -101,6 +101,18 @@ def normalize_identity(value: str) -> str:
     return re.sub(r"[^a-z0-9]", "", value.lower())
 
 
+def competition_slug(value: str) -> str:
+    value = value.strip()
+    parsed = urllib.parse.urlparse(value)
+    if parsed.scheme and parsed.netloc:
+        parts = [part for part in parsed.path.split("/") if part]
+        if "competitions" in parts:
+            index = parts.index("competitions")
+            if index + 1 < len(parts):
+                return parts[index + 1]
+    return value.rstrip("/").rsplit("/", 1)[-1]
+
+
 def slugify(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
@@ -114,7 +126,7 @@ def list_competitions(cutoff: str) -> list[dict[str, str]]:
             if not rows:
                 break
             for row in rows:
-                slug = field(row, "ref", "slug")
+                slug = competition_slug(field(row, "ref", "slug"))
                 deadline = parse_date(field(row, "deadline", "endDate"))
                 if slug and cutoff <= deadline < today:
                     found[slug] = {"slug": slug, "name": field(row, "title", "name") or slug, "endDate": deadline}
@@ -401,6 +413,8 @@ def sync() -> None:
 
 def self_check() -> None:
     assert normalize_identity("Team_A-1") == "teama1"
+    assert competition_slug("https://www.kaggle.com/competitions/example-slug") == "example-slug"
+    assert competition_slug("example-slug") == "example-slug"
     rows = [{"rank": str(rank), "teamName": f"user-{rank}"} for rank in range(1, 21)]
     assert set(ranked_teams(rows)) == {"user1", "user2"}
     cells = {1, 3}
