@@ -3,6 +3,7 @@
 dist
 .wrangler
 node_modules
+pnpm-debug.log*
 .env
 __pycache__
 *.pyc

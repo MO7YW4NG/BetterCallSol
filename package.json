@@ -1,11 +1,12 @@
 {
   "name": "bettercallsol",
   "private": true,
+  "packageManager": "pnpm@10.32.1",
   "type": "module",
   "scripts": {
     "build": "nuxt generate",
     "dev": "nuxt dev",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "pnpm run build && pnpm exec wrangler deploy",
     "test": "node --test tests/filter-solutions.test.mjs && python scripts/sync.py --self-check",
     "typecheck": "nuxt typecheck"
   },

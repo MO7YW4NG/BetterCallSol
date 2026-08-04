@@ -5,8 +5,9 @@ Evidence-backed Kaggle Solution finder for ML competition practitioners. The Nux
 ## Local development
 
 ```bash
-npm install
-npm run dev
+corepack enable
+pnpm install
+pnpm run dev
 ```
 
 The committed index starts with one verified top-10 Solution and illustrative gallery cards. Run the sync to replace the seed file with current evidence.
@@ -29,16 +30,16 @@ This is a client-rendered Nuxt SPA. `wrangler.jsonc` explicitly deploys `.output
 
 For Cloudflare Workers Builds, use:
 
-- Build command: `npm run build`
-- Deploy command: `npx wrangler deploy`
+- Build command: `pnpm run build`
+- Deploy command: `pnpm exec wrangler deploy`
 - Root directory: `/`
 
-For a local deploy, authenticate with `npx wrangler login` and run `npm run deploy`. The deploy token needs Account → Workers Scripts → Edit; the same token can retain Workers AI read access for the weekly sync.
+For a local deploy, authenticate with `pnpm exec wrangler login` and run `pnpm run deploy`. The deploy token needs Account → Workers Scripts → Edit; the same token can retain Workers AI read access for the weekly sync.
 
 ## Checks
 
 ```bash
-npm test
-npm run typecheck
-npm run build
+pnpm test
+pnpm run typecheck
+pnpm run build
 ```
