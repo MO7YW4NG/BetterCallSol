@@ -9,6 +9,7 @@ __pycache__
 *.pyc
 .agents/*
 .impeccable/*
+docs/adr/*
 
 CONTEXT.md
 PRODUCT.md

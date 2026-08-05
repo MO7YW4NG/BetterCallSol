@@ -22,9 +22,7 @@ Add these GitHub repository secrets:
 
 The `Refresh Solution index` workflow runs every Monday at 03:17 UTC and can also be dispatched manually. It scans completed Featured, Research, and Masters competitions in the rolling 18-month window, publishes only top-10% notebooks with conservative author/team evidence, calls Workers AI only for unseen notebook hashes or notebook revisions, and commits a changed `public/index.json`. Each competition also stores a first-page notebook count/fingerprint; unchanged competitions skip leaderboard and notebook processing on later runs.
 
-Workers AI is the primary extractor; when the free daily neuron quota is exhausted, the sync falls back to direct token matches in the notebook and still requires cited cells. Unverifiable team membership and special awards without structured Kaggle evidence are omitted rather than guessed.
-
-For a local sync iteration, set `KAGGLE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, and `CLOUDFLARE_API_TOKEN`, then run:
+For a local sync iteration, set `KAGGLE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, and `OPENROUTER_API_KEY`, then run:
 
 ```bash
 uv run --with kaggle==2.2.4 python scripts/sync.py --self-check
