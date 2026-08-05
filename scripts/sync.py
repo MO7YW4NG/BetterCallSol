@@ -22,6 +22,7 @@ from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX_PATH = ROOT / "public" / "index.json"
@@ -375,10 +376,8 @@ def call_workers_ai(cells: str, context: str = "") -> dict[str, Any]:
         with urllib.request.urlopen(request, timeout=90) as response:
             body = json.load(response)
     except urllib.error.HTTPError as error:
-        if error.code == 429:
-            print("Workers AI free allocation exhausted; falling back to OpenRouter.", file=sys.stderr)
-            return call_openrouter(cells, context)
-        raise
+        print(f"Workers AI HTTP {error.code}; falling back to OpenRouter.", file=sys.stderr)
+        return call_openrouter(cells, context)
     if not body.get("success"):
         raise RuntimeError(body.get("errors") or "Workers AI request failed")
     result = body.get("result", {}).get("response")
@@ -610,7 +609,7 @@ def sync() -> None:
                 stats["published"] += 1
                 print(f"  published {reference}")
             except urllib.error.HTTPError as error:
-                if error.code in (400, 402, 429):
+                if error.code in (400, 401, 402, 403, 429):
                     print("LLM extraction capacity unavailable; deferring remaining notebooks.", file=sys.stderr)
                     competition_cacheable = False
                     break
@@ -680,6 +679,13 @@ def self_check() -> None:
     }
     assert validate_extraction(value, cells)["pipeline"]["model"][0]["cellRefs"] == [1]
     assert parse_json_response('```json\n{"ok": true}\n```') == {"ok": True}
+    unauthorized = urllib.error.HTTPError("https://example.test", 401, "Unauthorized", {}, io.BytesIO())
+    with (
+        mock.patch.dict(os.environ, {"CLOUDFLARE_ACCOUNT_ID": "account", "CLOUDFLARE_API_TOKEN": "token"}),
+        mock.patch.object(urllib.request, "urlopen", side_effect=unauthorized),
+        mock.patch.dict(globals(), {"call_openrouter": lambda cells, context="": {"fallback": True}}),
+    ):
+        assert call_workers_ai("CELL 0 [code]\npass") == {"fallback": True}
     solutions = [
         {"methods": ["Tree"], "competition": {"slug": "a"}, "status": "emerging"},
         {"methods": ["tree"], "competition": {"slug": "b"}, "status": "emerging"},

@@ -1,110 +1,25 @@
 {
   "meta": {
-    "generatedAt": "2026-08-04T07:49:26.270260Z",
-    "evidenceThrough": "2026-08-04",
+    "generatedAt": "2026-08-05T06:41:04.659732Z",
+    "evidenceThrough": "2026-08-05",
     "coverageMonths": 18,
     "demo": false,
     "source": "Kaggle CLI and verified notebook evidence",
-    "competitionNotebookCache": {
-      "orbit-wars": {
-        "sampleCount": 100,
-        "sampleHash": "b31834d22fbc3242f4d9421e45bb6d5f4e9d8aad8bbd99d66a27d9c1c7f4beef"
-      },
-      "hull-tactical-market-prediction": {
-        "sampleCount": 100,
-        "sampleHash": "e266ebb94e68b93b2635592e43638ad0ab363c17b3b78c09658473d4184dba86"
-      },
-      "nvidia-nemotron-model-reasoning-challenge": {
-        "sampleCount": 100,
-        "sampleHash": "ee6e349ed810362d67ab05da525bbeeaae7704b695705fdb33f97ca57831926e"
-      },
-      "ai-mathematical-olympiad-progress-prize-3": {
-        "sampleCount": 100,
-        "sampleHash": "bd8adb36d1d761ed6d4a457f35bd1493ec46eeb622fc2005e5a373191f65d9cb"
-      },
-      "march-machine-learning-mania-2026": {
-        "sampleCount": 100,
-        "sampleHash": "8ba12c0fea7273db656a625ee18a1d8708ee916fcecf54fb1a290ec3fe8e2845"
-      }
-    }
+    "competitionNotebookCache": {}
   },
   "solutions": [
     {
-      "id": "orbit-wars-slawekbiel-the-producer-v2",
-      "title": "The Producer V2",
-      "summary": "Notebook code evidence identifies PyTorch; each claim cites the source cell.",
-      "task": {
-        "primary": "Classification",
-        "secondary": []
-      },
-      "modalities": [
-        "Text"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "orbit-wars",
-        "name": "orbit-wars",
-        "endDate": "2026-07-07",
-        "url": "https://www.kaggle.com/competitions/orbit-wars"
-      },
-      "result": {
-        "rank": 18,
-        "teams": 4730,
-        "percentile": 0.38,
-        "teamName": "Slawek Biel",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "PyTorch"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [],
-        "model": [],
-        "training": [
-          {
-            "text": "Notebook code uses PyTorch.",
-            "cellRefs": [
-              2
-            ]
-          }
-        ],
-        "inference": [],
-        "postprocessing": [],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "slawekbiel",
-          "url": "https://www.kaggle.com/code/slawekbiel/the-producer-v2",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2,
-            3,
-            4
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "562947cf2f19ec3d668d494e66621c4236b60db732af9f923aae47d0677ff7bd",
-      "sourceRef": "slawekbiel/the-producer-v2",
-      "sourceRevision": "2026-06-12 13:12:43.997000"
-    },
-    {
       "id": "orbit-wars-slawekbiel-the-producer-agent",
-      "title": "The Producer",
-      "summary": "Notebook code evidence identifies PyTorch, Prediction post-processing; each claim cites the source cell.",
+      "title": "ProducerLite Heuristic Agent for Orbit Wars",
+      "summary": "A greedy heuristic agent that selects fleet launches based on ROI and regroups ships to strengthen frontlines.",
       "task": {
-        "primary": "Classification",
+        "primary": "Instance Segmentation",
         "secondary": []
       },
       "modalities": [
-        "Tabular"
+        "Image"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "mAP",
       "competition": {
         "slug": "orbit-wars",
         "name": "orbit-wars",
@@ -118,29 +33,54 @@
         "teamName": "Slawek Biel",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "Prediction post-processing"
+        "Greedy ROI scoring",
+        "Regroup gradient"
       ],
       "pipeline": {
         "validation": [],
-        "preprocessing": [],
-        "model": [],
-        "training": [
+        "preprocessing": [
           {
-            "text": "Notebook code uses PyTorch.",
+            "text": "Parses raw observation into tensor format using single_obs_to_tensor",
+            "cellRefs": [
+              2
+            ]
+          },
+          {
+            "text": "Builds distance cache and movement configuration for planning",
             "cellRefs": [
               2
             ]
           }
         ],
-        "inference": [],
+        "model": [],
+        "training": [],
+        "inference": [
+          {
+            "text": "Computes action via plan_lite_waves and regroup planning",
+            "cellRefs": [
+              2
+            ]
+          },
+          {
+            "text": "Applies private planned launches and converts to sparse payload",
+            "cellRefs": [
+              2
+            ]
+          },
+          {
+            "text": "Entry point agent function maps observation to moves",
+            "cellRefs": [
+              2
+            ]
+          }
+        ],
         "postprocessing": [
           {
-            "text": "Notebook code uses Prediction post-processing.",
+            "text": "Converts sparse action row to list of moves via sparse_action_row_to_moves",
             "cellRefs": [
-              0
+              2
             ]
           }
         ],
@@ -166,17 +106,17 @@
       "sourceRevision": "2026-06-03 10:10:29.677000"
     },
     {
-      "id": "orbit-wars-slawekbiel-random-walk-round-the-orbit",
-      "title": "Submission rating tracker",
-      "summary": "Notebook code evidence identifies Tabular feature preparation; each claim cites the source cell.",
+      "id": "orbit-wars-shummingfang-orbit-wars-exp50",
+      "title": "Orbit Wars Agent Pipeline",
+      "summary": "A heuristic agent for Orbit Wars using multi-size fleet candidates and greedy selection with phased wave adjustments.",
       "task": {
-        "primary": "Classification",
+        "primary": "Instance Segmentation",
         "secondary": []
       },
       "modalities": [
-        "Text"
+        "Tabular"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "F1 Score",
       "competition": {
         "slug": "orbit-wars",
         "name": "orbit-wars",
@@ -184,92 +124,278 @@
         "url": "https://www.kaggle.com/competitions/orbit-wars"
       },
       "result": {
-        "rank": 18,
+        "rank": 289,
         "teams": 4730,
-        "percentile": 0.38,
-        "teamName": "Slawek Biel",
+        "percentile": 6.11,
+        "teamName": "ShumingFang",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "Tabular feature preparation"
+        "Heuristic Planning",
+        "Greedy Selection",
+        "Multi-size Fleet Candidates",
+        "Phased Wave Adjustment"
       ],
       "pipeline": {
         "validation": [],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              2
-            ]
-          }
-        ],
-        "model": [],
-        "training": [],
-        "inference": [],
-        "postprocessing": [],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "slawekbiel",
-          "url": "https://www.kaggle.com/code/slawekbiel/random-walk-round-the-orbit",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "2ac87d5efb54586ef8bef1a795d57d457b7b6ea73699c8b2d52c8adc1bcce81c",
-      "sourceRef": "slawekbiel/random-walk-round-the-orbit",
-      "sourceRevision": "2026-07-07 15:51:51.850000"
-    },
-    {
-      "id": "orbit-wars-slawekbiel-am-i-in-the-top-10-replays-yet",
-      "title": "Put your team name here",
-      "summary": "Notebook code evidence identifies Tabular feature preparation; each claim cites the source cell.",
-      "task": {
-        "primary": "Classification",
-        "secondary": []
-      },
-      "modalities": [
-        "Text"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "orbit-wars",
-        "name": "orbit-wars",
-        "endDate": "2026-07-07",
-        "url": "https://www.kaggle.com/competitions/orbit-wars"
-      },
-      "result": {
-        "rank": 18,
-        "teams": 4730,
-        "percentile": 0.38,
-        "teamName": "Slawek Biel",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "Tabular feature preparation"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Uses single_obs_to_tensor and parse_obs for preprocessing",
             "cellRefs": [
               1
             ]
           }
         ],
+        "model": [
+          {
+            "text": "Uses plan_lite_waves for core decision making",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Agent function runs tensor_action to get sparse action row",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "postprocessing": [
+          {
+            "text": "Postprocesses entries to sparse payload and converts to moves",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "ensembling": []
+      },
+      "evidence": [
+        {
+          "owner": "shummingfang",
+          "url": "https://www.kaggle.com/code/shummingfang/orbit-wars-exp50",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "0ab85133905646b5dadc0a5bdab4d90fc522fed12b1651c9f4eff2f9527f39eb",
+      "sourceRef": "shummingfang/orbit-wars-exp50",
+      "sourceRevision": "2026-06-09 09:49:30.893000"
+    },
+    {
+      "id": "orbit-wars-shummingfang-orbit-wars-exp30",
+      "title": "Orbit Wars Heuristic Solution",
+      "summary": "Uses Melis heuristic and search step for decision making.",
+      "task": {
+        "primary": "Instance Segmentation",
+        "secondary": []
+      },
+      "modalities": [
+        "Image"
+      ],
+      "metric": "mAP",
+      "competition": {
+        "slug": "orbit-wars",
+        "name": "orbit-wars",
+        "endDate": "2026-07-07",
+        "url": "https://www.kaggle.com/competitions/orbit-wars"
+      },
+      "result": {
+        "rank": 289,
+        "teams": 4730,
+        "percentile": 6.11,
+        "teamName": "ShumingFang",
+        "award": null
+      },
+      "status": "emerging",
+      "methods": [
+        "Melis heuristic",
+        "Search step"
+      ],
+      "pipeline": {
+        "validation": [],
+        "preprocessing": [
+          {
+            "text": "Builds World object from observation",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "model": [
+          {
+            "text": "Uses Melis heuristic for state evaluation",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Selects action via search step",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "postprocessing": [],
+        "ensembling": []
+      },
+      "evidence": [
+        {
+          "owner": "shummingfang",
+          "url": "https://www.kaggle.com/code/shummingfang/orbit-wars-exp30",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1,
+            2
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "e964fd0dc8e504ccac87051e595f4cd053e2f29ece0d6c0062aa4eb16ceea1b0",
+      "sourceRef": "shummingfang/orbit-wars-exp30",
+      "sourceRevision": "2026-06-01 08:51:14.893000"
+    },
+    {
+      "id": "orbit-wars-romantamrazov-orbit-wars-i-m-stronger",
+      "title": "Orbit Wars Producer Hybrid v4 Solution Pipeline",
+      "summary": "The solution uses a producer-based heuristic with flow diff scoring for attack planning, converts observations to tensors, processes them via an agent function, and converts sparse actions to moves. No training, validation, or ensembling is involved.",
+      "task": {
+        "primary": "Instance Segmentation",
+        "secondary": []
+      },
+      "modalities": [
+        "Tabular"
+      ],
+      "metric": "Accuracy",
+      "competition": {
+        "slug": "orbit-wars",
+        "name": "orbit-wars",
+        "endDate": "2026-07-07",
+        "url": "https://www.kaggle.com/competitions/orbit-wars"
+      },
+      "result": {
+        "rank": 401,
+        "teams": 4730,
+        "percentile": 8.48,
+        "teamName": "больше мне надо больше",
+        "award": null
+      },
+      "status": "emerging",
+      "methods": [
+        "ProducerLite heuristic",
+        "Observation tensor conversion",
+        "Agent inference",
+        "Sparse action conversion"
+      ],
+      "pipeline": {
+        "validation": [],
+        "preprocessing": [
+          {
+            "text": "Converts raw observation to tensor using single_obs_to_tensor",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "model": [
+          {
+            "text": "Uses a producer-based heuristic with flow diff scoring for attack planning",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Agent function processes observation and returns action via tensor_action",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "postprocessing": [
+          {
+            "text": "Converts sparse action payload to moves using sparse_action_row_to_moves",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "ensembling": []
+      },
+      "evidence": [
+        {
+          "owner": "romantamrazov",
+          "url": "https://www.kaggle.com/code/romantamrazov/orbit-wars-i-m-stronger",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "84937cf94e095aded0a1612d1e7e2ca7d841a66aaa979d9cb6d311e6d5deef9d",
+      "sourceRef": "romantamrazov/orbit-wars-i-m-stronger",
+      "sourceRevision": "2026-06-08 09:42:28.760000"
+    },
+    {
+      "id": "orbit-wars-romantamrazov-orbit-wars-i-m-better",
+      "title": "Orbit Wars Submission Archive Builder",
+      "summary": "Creates a submission archive for the Orbit Wars competition by packaging agent code and validating the archive.",
+      "task": {
+        "primary": "Generation",
+        "secondary": []
+      },
+      "modalities": [
+        "Text"
+      ],
+      "metric": "Score",
+      "competition": {
+        "slug": "orbit-wars",
+        "name": "orbit-wars",
+        "endDate": "2026-07-07",
+        "url": "https://www.kaggle.com/competitions/orbit-wars"
+      },
+      "result": {
+        "rank": 401,
+        "teams": 4730,
+        "percentile": 8.48,
+        "teamName": "больше мне надо больше",
+        "award": null
+      },
+      "status": "emerging",
+      "methods": [
+        "Archive Creation",
+        "Validation"
+      ],
+      "pipeline": {
+        "validation": [
+          {
+            "text": "Validates the generated submission archive",
+            "cellRefs": [
+              0
+            ]
+          }
+        ],
+        "preprocessing": [],
         "model": [],
         "training": [],
         "inference": [],
@@ -278,8 +404,8 @@
       },
       "evidence": [
         {
-          "owner": "slawekbiel",
-          "url": "https://www.kaggle.com/code/slawekbiel/am-i-in-the-top-10-replays-yet",
+          "owner": "romantamrazov",
+          "url": "https://www.kaggle.com/code/romantamrazov/orbit-wars-i-m-better",
           "version": 1,
           "cellRefs": [
             0,
@@ -289,30 +415,30 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10
+            7
           ],
           "verified": true
         }
       ],
-      "sourceHash": "f4942effaae6db70faf3c749dc2cb7795ee6dfdbf488f3b28a104f022484a11e",
-      "sourceRef": "slawekbiel/am-i-in-the-top-10-replays-yet",
-      "sourceRevision": "2026-06-24 23:15:58.630000"
+      "sourceHash": "18da5d15b409f1d4f3bcbc937c43d79ad588b07636ddd2935e4eb9b3b3a407ab",
+      "sourceRef": "romantamrazov/orbit-wars-i-m-better",
+      "sourceRevision": "2026-06-09 08:34:19.427000"
     },
     {
-      "id": "orbit-wars-slawekbiel-benchmark-for-aiming-implementation",
-      "title": "Aiming benchmark with a simple aimer implementation",
-      "summary": "Notebook code evidence identifies Custom Python pipeline; each claim cites the source cell.",
+      "id": "orbit-wars-johnjanson-lb-max-score-1000-agi-is-here",
+      "title": "Orbit Wars Rule-Based Strategy",
+      "summary": "A heuristic-based strategy for the orbit-wars competition using game simulation and mission scoring.",
       "task": {
-        "primary": "Classification",
-        "secondary": []
+        "primary": "Forecasting",
+        "secondary": [
+          "Generation",
+          "Ranking"
+        ]
       },
       "modalities": [
-        "Text"
+        "Tabular"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Accuracy",
       "competition": {
         "slug": "orbit-wars",
         "name": "orbit-wars",
@@ -320,725 +446,82 @@
         "url": "https://www.kaggle.com/competitions/orbit-wars"
       },
       "result": {
-        "rank": 18,
+        "rank": 401,
         "teams": 4730,
-        "percentile": 0.38,
-        "teamName": "Slawek Biel",
+        "percentile": 8.48,
+        "teamName": "больше мне надо больше",
         "award": null
       },
       "status": "emerging",
       "methods": [
-        "Custom Python pipeline"
+        "Rule-based",
+        "Simulation",
+        "Greedy selection"
       ],
       "pipeline": {
         "validation": [],
-        "preprocessing": [],
+        "preprocessing": [
+          {
+            "text": "Uses helper functions for distance, speed, and position prediction",
+            "cellRefs": [
+              0
+            ]
+          }
+        ],
         "model": [
           {
-            "text": "Notebook code uses Custom Python pipeline.",
+            "text": "Defines WorldModel class for game state simulation and prediction",
             "cellRefs": [
               0
             ]
           }
         ],
         "training": [],
-        "inference": [],
+        "inference": [
+          {
+            "text": "Uses plan_moves function to decide moves based on WorldModel",
+            "cellRefs": [
+              0
+            ]
+          }
+        ],
         "postprocessing": [],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "slawekbiel",
-          "url": "https://www.kaggle.com/code/slawekbiel/benchmark-for-aiming-implementation",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "a29a7c656f6e8877a27444f2dbaa7d86e655f69a40c832ac7652b2d28c486ea6",
-      "sourceRef": "slawekbiel/benchmark-for-aiming-implementation",
-      "sourceRevision": "2026-05-31 11:43:03.817000"
-    },
-    {
-      "id": "orbit-wars-vickimar-orbit-wars-heuristic-lb-1110",
-      "title": "Orbit Wars — heuristic agent",
-      "summary": "Notebook code evidence identifies Prediction post-processing; each claim cites the source cell.",
-      "task": {
-        "primary": "Classification",
-        "secondary": []
-      },
-      "modalities": [
-        "Tabular"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "orbit-wars",
-        "name": "orbit-wars",
-        "endDate": "2026-07-07",
-        "url": "https://www.kaggle.com/competitions/orbit-wars"
-      },
-      "result": {
-        "rank": 32,
-        "teams": 4730,
-        "percentile": 0.68,
-        "teamName": "vkhydras",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "Prediction post-processing"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [],
-        "model": [],
-        "training": [],
-        "inference": [],
-        "postprocessing": [
-          {
-            "text": "Notebook code uses Prediction post-processing.",
-            "cellRefs": [
-              1
-            ]
-          }
-        ],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "vickimar",
-          "url": "https://www.kaggle.com/code/vickimar/orbit-wars-heuristic-lb-1110",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "3fe7a1c96fb4a21c4f39475d899ef1f395348a61a3d25140a50afad079cb0d15",
-      "sourceRef": "vickimar/orbit-wars-heuristic-lb-1110",
-      "sourceRevision": "2026-05-29 07:15:53.800000"
-    },
-    {
-      "id": "hull-tactical-market-prediction-ahsuna123-hull-tactical-complete-eda-deep-dive",
-      "title": "Hull Tactical · Market Prediction",
-      "summary": "Notebook code evidence identifies LightGBM, XGBoost, Feature/image normalization, Ensembling; each claim cites the source cell.",
-      "task": {
-        "primary": "Forecasting",
-        "secondary": []
-      },
-      "modalities": [
-        "Text",
-        "Time Series"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "hull-tactical-market-prediction",
-        "name": "hull-tactical-market-prediction",
-        "endDate": "2026-06-25",
-        "url": "https://www.kaggle.com/competitions/hull-tactical-market-prediction"
-      },
-      "result": {
-        "rank": 67,
-        "teams": 3294,
-        "percentile": 2.03,
-        "teamName": "AC",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "LightGBM",
-        "XGBoost",
-        "Feature/image normalization",
-        "Ensembling",
-        "Prediction post-processing",
-        "Tabular feature preparation"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Feature/image normalization.",
-            "cellRefs": [
-              1,
-              2,
-              5,
-              25
-            ]
-          },
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              1,
-              2,
-              37
-            ]
-          }
-        ],
-        "model": [
-          {
-            "text": "Notebook code uses LightGBM.",
-            "cellRefs": [
-              23
-            ]
-          },
-          {
-            "text": "Notebook code uses XGBoost.",
-            "cellRefs": [
-              23
-            ]
-          }
-        ],
-        "training": [],
-        "inference": [],
-        "postprocessing": [
-          {
-            "text": "Notebook code uses Prediction post-processing.",
-            "cellRefs": [
-              25,
-              37
-            ]
-          }
-        ],
         "ensembling": [
           {
-            "text": "Notebook code uses Ensembling.",
+            "text": "Selects best mission from multiple strategies (single, snipe, etc.) by score",
             "cellRefs": [
-              37
+              0
             ]
           }
         ]
       },
       "evidence": [
         {
-          "owner": "ahsuna123",
-          "url": "https://www.kaggle.com/code/ahsuna123/hull-tactical-complete-eda-deep-dive",
+          "owner": "johnjanson",
+          "url": "https://www.kaggle.com/code/johnjanson/lb-max-score-1000-agi-is-here",
           "version": 1,
           "cellRefs": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33,
-            34,
-            35,
-            36,
-            37
+            0
           ],
           "verified": true
         }
       ],
-      "sourceHash": "8db0934dc04d302ac28701b46dfb06de0233c60c93d192dd2e4246cc402644a5",
-      "sourceRef": "ahsuna123/hull-tactical-complete-eda-deep-dive",
-      "sourceRevision": "2026-01-06 15:31:04.360000"
-    },
-    {
-      "id": "hull-tactical-market-prediction-ahsuna123-hull-tactic-no-overfitting-leakage",
-      "title": "S&P 500 Returns Prediction — Comprehensive Analysis & Pipeline",
-      "summary": "Notebook code evidence identifies LightGBM, XGBoost, Feature/image normalization, Ensembling; each claim cites the source cell.",
-      "task": {
-        "primary": "Regression",
-        "secondary": []
-      },
-      "modalities": [
-        "Time Series"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "hull-tactical-market-prediction",
-        "name": "hull-tactical-market-prediction",
-        "endDate": "2026-06-25",
-        "url": "https://www.kaggle.com/competitions/hull-tactical-market-prediction"
-      },
-      "result": {
-        "rank": 67,
-        "teams": 3294,
-        "percentile": 2.03,
-        "teamName": "AC",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "LightGBM",
-        "XGBoost",
-        "Feature/image normalization",
-        "Ensembling",
-        "Prediction post-processing",
-        "Tabular feature preparation"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Feature/image normalization.",
-            "cellRefs": [
-              1
-            ]
-          },
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              0,
-              1
-            ]
-          }
-        ],
-        "model": [
-          {
-            "text": "Notebook code uses LightGBM.",
-            "cellRefs": [
-              0,
-              1
-            ]
-          },
-          {
-            "text": "Notebook code uses XGBoost.",
-            "cellRefs": [
-              0,
-              1
-            ]
-          }
-        ],
-        "training": [],
-        "inference": [],
-        "postprocessing": [
-          {
-            "text": "Notebook code uses Prediction post-processing.",
-            "cellRefs": [
-              1
-            ]
-          }
-        ],
-        "ensembling": [
-          {
-            "text": "Notebook code uses Ensembling.",
-            "cellRefs": [
-              0,
-              1
-            ]
-          }
-        ]
-      },
-      "evidence": [
-        {
-          "owner": "ahsuna123",
-          "url": "https://www.kaggle.com/code/ahsuna123/hull-tactic-no-overfitting-leakage",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "367565eb7a0fe70603ce0b471672c77a3fec8106cf585a64c6d41d693a584fcb",
-      "sourceRef": "ahsuna123/hull-tactic-no-overfitting-leakage",
-      "sourceRevision": "2025-10-22 15:57:24.467000"
-    },
-    {
-      "id": "hull-tactical-market-prediction-junjitakeshima-hull-basic-approach-and-new-feature-eng",
-      "title": "[Hull] Basic Approach and new feature（日本語/Eng） #",
-      "summary": "Notebook code evidence identifies LightGBM, Prediction post-processing, Tabular feature preparation; each claim cites the source cell.",
-      "task": {
-        "primary": "Forecasting",
-        "secondary": []
-      },
-      "modalities": [
-        "Image",
-        "Text",
-        "Time Series"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "hull-tactical-market-prediction",
-        "name": "hull-tactical-market-prediction",
-        "endDate": "2026-06-25",
-        "url": "https://www.kaggle.com/competitions/hull-tactical-market-prediction"
-      },
-      "result": {
-        "rank": 144,
-        "teams": 3294,
-        "percentile": 4.37,
-        "teamName": "Junji Takeshima",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "LightGBM",
-        "Prediction post-processing",
-        "Tabular feature preparation"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              1,
-              33
-            ]
-          }
-        ],
-        "model": [
-          {
-            "text": "Notebook code uses LightGBM.",
-            "cellRefs": [
-              1,
-              3,
-              4,
-              5
-            ]
-          }
-        ],
-        "training": [],
-        "inference": [],
-        "postprocessing": [
-          {
-            "text": "Notebook code uses Prediction post-processing.",
-            "cellRefs": [
-              4,
-              33
-            ]
-          }
-        ],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "junjitakeshima",
-          "url": "https://www.kaggle.com/code/junjitakeshima/hull-basic-approach-and-new-feature-eng",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "126999bf187524dfa3d7f7188fcd24f8888dbca9ec63d904a8a6e1cd610663b5",
-      "sourceRef": "junjitakeshima/hull-basic-approach-and-new-feature-eng",
-      "sourceRevision": "2025-10-10 11:39:00.580000"
-    },
-    {
-      "id": "hull-tactical-market-prediction-taylorsamarel-hull-tactical-viz-insights",
-      "title": "Professional styling",
-      "summary": "Notebook code evidence identifies Feature/image normalization, Prediction post-processing, Tabular feature preparation; each claim cites the source cell.",
-      "task": {
-        "primary": "Forecasting",
-        "secondary": []
-      },
-      "modalities": [
-        "Image",
-        "Text",
-        "Time Series"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "hull-tactical-market-prediction",
-        "name": "hull-tactical-market-prediction",
-        "endDate": "2026-06-25",
-        "url": "https://www.kaggle.com/competitions/hull-tactical-market-prediction"
-      },
-      "result": {
-        "rank": 224,
-        "teams": 3294,
-        "percentile": 6.8,
-        "teamName": "Taylor S. Amarel",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "Feature/image normalization",
-        "Prediction post-processing",
-        "Tabular feature preparation"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Feature/image normalization.",
-            "cellRefs": [
-              0,
-              1
-            ]
-          },
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              0,
-              1
-            ]
-          }
-        ],
-        "model": [],
-        "training": [],
-        "inference": [],
-        "postprocessing": [
-          {
-            "text": "Notebook code uses Prediction post-processing.",
-            "cellRefs": [
-              0,
-              1
-            ]
-          }
-        ],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "taylorsamarel",
-          "url": "https://www.kaggle.com/code/taylorsamarel/hull-tactical-viz-insights",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "27248f2b162a209ce6d74e4475a9092b3715118bda64f4b2d98da85cf4ac7af2",
-      "sourceRef": "taylorsamarel/hull-tactical-viz-insights",
-      "sourceRevision": "2025-09-28 03:52:12.583000"
-    },
-    {
-      "id": "hull-tactical-market-prediction-taylorsamarel-can-you-predict-market-predictability",
-      "title": "This Python 3 environment comes with many helpful analytics libraries installed",
-      "summary": "Notebook code evidence identifies Prediction post-processing, Tabular feature preparation; each claim cites the source cell.",
-      "task": {
-        "primary": "Forecasting",
-        "secondary": []
-      },
-      "modalities": [
-        "Image",
-        "Text",
-        "Time Series"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "hull-tactical-market-prediction",
-        "name": "hull-tactical-market-prediction",
-        "endDate": "2026-06-25",
-        "url": "https://www.kaggle.com/competitions/hull-tactical-market-prediction"
-      },
-      "result": {
-        "rank": 224,
-        "teams": 3294,
-        "percentile": 6.8,
-        "teamName": "Taylor S. Amarel",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "Prediction post-processing",
-        "Tabular feature preparation"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              0,
-              1
-            ]
-          }
-        ],
-        "model": [],
-        "training": [],
-        "inference": [],
-        "postprocessing": [
-          {
-            "text": "Notebook code uses Prediction post-processing.",
-            "cellRefs": [
-              1
-            ]
-          }
-        ],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "taylorsamarel",
-          "url": "https://www.kaggle.com/code/taylorsamarel/can-you-predict-market-predictability",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "672157f822a47b7ab002defe11375addb88d5afa19f4f570f6d1a851a9eb79de",
-      "sourceRef": "taylorsamarel/can-you-predict-market-predictability",
-      "sourceRevision": "2025-09-28 21:19:36.257000"
-    },
-    {
-      "id": "hull-tactical-market-prediction-gangarampandey-hull-tactical-market-prediction-maxscore",
-      "title": "This Python 3 environment comes with many helpful analytics libraries installed",
-      "summary": "Notebook code evidence identifies Prediction post-processing, Tabular feature preparation; each claim cites the source cell.",
-      "task": {
-        "primary": "Classification",
-        "secondary": []
-      },
-      "modalities": [
-        "Image",
-        "Time Series"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "hull-tactical-market-prediction",
-        "name": "hull-tactical-market-prediction",
-        "endDate": "2026-06-25",
-        "url": "https://www.kaggle.com/competitions/hull-tactical-market-prediction"
-      },
-      "result": {
-        "rank": 225,
-        "teams": 3294,
-        "percentile": 6.83,
-        "teamName": "GANGA RAM PANDEY",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "Prediction post-processing",
-        "Tabular feature preparation"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              0,
-              2
-            ]
-          }
-        ],
-        "model": [],
-        "training": [],
-        "inference": [],
-        "postprocessing": [
-          {
-            "text": "Notebook code uses Prediction post-processing.",
-            "cellRefs": [
-              6,
-              8
-            ]
-          }
-        ],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "gangarampandey",
-          "url": "https://www.kaggle.com/code/gangarampandey/hull-tactical-market-prediction-maxscore",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "86fd2f44cacb0432ee92fb8862705e81ef449b20c12ec8bbffab2b10e1a38685",
-      "sourceRef": "gangarampandey/hull-tactical-market-prediction-maxscore",
-      "sourceRevision": "2025-10-02 13:55:31.073000"
+      "sourceHash": "2e95931f9e1d555cced9445cdc80d9761fb9706e33553135bf7c6c24e7bd914f",
+      "sourceRef": "johnjanson/lb-max-score-1000-agi-is-here",
+      "sourceRevision": "2026-04-19 08:12:24.303000"
     },
     {
       "id": "nvidia-nemotron-model-reasoning-challenge-asalhi-tinker-adapter-to-ready-to-submit-adapter",
-      "title": "monkey-patch",
-      "summary": "Notebook code evidence identifies PyTorch, Transformer text model; each claim cites the source cell.",
+      "title": "Nemotron LoRA Adapter Submission Pipeline",
+      "summary": "Patches LoRA merging, builds adapter, and packages submission.",
       "task": {
-        "primary": "Classification",
+        "primary": "Forecasting",
         "secondary": []
       },
       "modalities": [
-        "Tabular"
+        "Text"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Accuracy",
       "competition": {
         "slug": "nvidia-nemotron-model-reasoning-challenge",
         "name": "nvidia-nemotron-model-reasoning-challenge",
@@ -1052,32 +535,33 @@
         "teamName": "Ali",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "Transformer text model"
+        "LoRA",
+        "Adapter Merging"
       ],
       "pipeline": {
         "validation": [],
         "preprocessing": [],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Builds LoRA adapter and patches fused projection merging",
             "cellRefs": [
+              0,
               2
             ]
           }
         ],
-        "training": [
+        "training": [],
+        "inference": [],
+        "postprocessing": [
           {
-            "text": "Notebook code uses PyTorch.",
+            "text": "Creates zip archive of submission",
             "cellRefs": [
-              1
+              3
             ]
           }
         ],
-        "inference": [],
-        "postprocessing": [],
         "ensembling": []
       },
       "evidence": [
@@ -1099,154 +583,17 @@
       "sourceRevision": "2026-04-15 06:46:31.057000"
     },
     {
-      "id": "nvidia-nemotron-model-reasoning-challenge-huikang-tinker-submission-notebook",
-      "title": "Compare configs",
-      "summary": "Notebook code evidence identifies PyTorch, Transformer text model, Tabular feature preparation; each claim cites the source cell.",
-      "task": {
-        "primary": "Generation",
-        "secondary": []
-      },
-      "modalities": [
-        "Image",
-        "Text",
-        "Audio"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "nvidia-nemotron-model-reasoning-challenge",
-        "name": "nvidia-nemotron-model-reasoning-challenge",
-        "endDate": "2026-06-15",
-        "url": "https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge"
-      },
-      "result": {
-        "rank": 106,
-        "teams": 4183,
-        "percentile": 2.53,
-        "teamName": "Tong Hui Kang",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "PyTorch",
-        "Transformer text model",
-        "Tabular feature preparation"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              33,
-              41
-            ]
-          }
-        ],
-        "model": [
-          {
-            "text": "Notebook code uses Transformer text model.",
-            "cellRefs": [
-              0,
-              16,
-              33,
-              34
-            ]
-          }
-        ],
-        "training": [
-          {
-            "text": "Notebook code uses PyTorch.",
-            "cellRefs": [
-              24,
-              32
-            ]
-          }
-        ],
-        "inference": [],
-        "postprocessing": [],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "huikang",
-          "url": "https://www.kaggle.com/code/huikang/tinker-submission-notebook",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33,
-            34,
-            35,
-            36,
-            37,
-            38,
-            39,
-            40,
-            41,
-            42,
-            43,
-            44,
-            45,
-            46,
-            47,
-            48,
-            49,
-            50,
-            51,
-            52,
-            53
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "0686204337cc0c60135e003df3b9a1c478c02290c69380ec5f6f7215efeac25f",
-      "sourceRef": "huikang/tinker-submission-notebook",
-      "sourceRevision": "2026-04-14 07:42:19.977000"
-    },
-    {
       "id": "nvidia-nemotron-model-reasoning-challenge-huikang-end-to-end-finetuning-for-lb-0-85",
       "title": "Nemotron finetuning pipeline",
-      "summary": "Notebook code evidence identifies PyTorch, Transformer text model, Tabular feature preparation; each claim cites the source cell.",
+      "summary": "Pipeline for finetuning Nemotron-3-Nano-30B-A3B model using LoRA and custom training loop with Cross Cross-Entropy loss.",
       "task": {
-        "primary": "Generation",
+        "primary": "Forecasting",
         "secondary": []
       },
       "modalities": [
-        "Image",
         "Text"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Accuracy",
       "competition": {
         "slug": "nvidia-nemotron-model-reasoning-challenge",
         "name": "nvidia-nemotron-model-reasoning-challenge",
@@ -1260,43 +607,48 @@
         "teamName": "Tong Hui Kang",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "Transformer text model",
-        "Tabular feature preparation"
+        "LoRA",
+        "Cross Cross-Entropy",
+        "AdamW",
+        "Model saving"
       ],
       "pipeline": {
         "validation": [],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Loads and preprocesses tokenized examples from corpus",
             "cellRefs": [
-              5
+              4
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Loads base model and applies LoRA adapter with CCE patch",
             "cellRefs": [
-              3,
-              4,
-              5
+              4
             ]
           }
         ],
         "training": [
           {
-            "text": "Notebook code uses PyTorch.",
+            "text": "Trains model using AdamW optimizer with learning rate scheduling and gradient clipping",
             "cellRefs": [
-              4,
-              5
+              4
             ]
           }
         ],
         "inference": [],
-        "postprocessing": [],
+        "postprocessing": [
+          {
+            "text": "Saves adapter model and packages for submission",
+            "cellRefs": [
+              4
+            ]
+          }
+        ],
         "ensembling": []
       },
       "evidence": [
@@ -1321,17 +673,17 @@
       "sourceRevision": "2026-04-25 04:51:03.970000"
     },
     {
-      "id": "nvidia-nemotron-model-reasoning-challenge-konbu17-nemotron-sft-lora-with-cot",
-      "title": "Nemotron-3-Nano LoRA SFT with CoT-Selected Training Data",
-      "summary": "Notebook code evidence identifies PyTorch, Transformer text model, Tabular feature preparation; each claim cites the source cell.",
+      "id": "nvidia-nemotron-model-reasoning-challenge-dgxchen-training-with-unsloth-to-achieve-0-85-lb",
+      "title": "Nemotron Model Reasoning Challenge Solution Pipeline",
+      "summary": "Pipeline for training and submitting a LoRA-adapted Nemotron-3-Nano-30B model using stratified sampling and custom trainer.",
       "task": {
-        "primary": "Generation",
+        "primary": "Semantic Segmentation",
         "secondary": []
       },
       "modalities": [
         "Text"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Accuracy",
       "competition": {
         "slug": "nvidia-nemotron-model-reasoning-challenge",
         "name": "nvidia-nemotron-model-reasoning-challenge",
@@ -1339,55 +691,108 @@
         "url": "https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge"
       },
       "result": {
-        "rank": 218,
+        "rank": 202,
         "teams": 4183,
-        "percentile": 5.21,
-        "teamName": "konbu17",
+        "percentile": 4.83,
+        "teamName": "dz",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "Transformer text model",
-        "Tabular feature preparation"
+        "LoRA",
+        "Stratified Sampling",
+        "SFTTrainer",
+        "Model Packaging"
       ],
       "pipeline": {
         "validation": [],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Load and sample the dataset from CSV, then format into conversation records",
             "cellRefs": [
-              10
+              11
+            ]
+          },
+          {
+            "text": "Create HuggingFace Dataset from formatted records",
+            "cellRefs": [
+              11
+            ]
+          },
+          {
+            "text": "Define formatting function to apply chat template",
+            "cellRefs": [
+              11
+            ]
+          },
+          {
+            "text": "Generate stratified sampling order based on problem types for batching",
+            "cellRefs": [
+              11
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Load base Nemotron-3-Nano-30B model and tokenizer with bfloat16",
             "cellRefs": [
-              0,
-              7,
-              10
+              8
+            ]
+          },
+          {
+            "text": "Apply LoRA adapter with rank 32 and target modules for projection layers",
+            "cellRefs": [
+              9
             ]
           }
         ],
         "training": [
           {
-            "text": "Notebook code uses PyTorch.",
+            "text": "Configure SFT training with batch size 1, gradient accumulation 32, learning rate 2e-4, and bfloat16",
             "cellRefs": [
-              6,
-              7
+              11
+            ]
+          },
+          {
+            "text": "Use StratifiedSFTTrainer with precomputed order to maintain type balance in batches",
+            "cellRefs": [
+              11
+            ]
+          },
+          {
+            "text": "Train model for 1 epoch and save LoRA adapter",
+            "cellRefs": [
+              11
             ]
           }
         ],
         "inference": [],
-        "postprocessing": [],
+        "postprocessing": [
+          {
+            "text": "Copy trained adapter files (adapter_config.json, adapter_model.safetensors) to submission directory",
+            "cellRefs": [
+              15
+            ]
+          },
+          {
+            "text": "Update adapter config to set base model name, inference mode, and LoRA dropout",
+            "cellRefs": [
+              15
+            ]
+          },
+          {
+            "text": "Package adapter files into submission.zip",
+            "cellRefs": [
+              15
+            ]
+          }
+        ],
         "ensembling": []
       },
       "evidence": [
         {
-          "owner": "konbu17",
-          "url": "https://www.kaggle.com/code/konbu17/nemotron-sft-lora-with-cot",
+          "owner": "dgxchen",
+          "url": "https://www.kaggle.com/code/dgxchen/training-with-unsloth-to-achieve-0-85-lb",
           "version": 1,
           "cellRefs": [
             0,
@@ -1404,27 +809,28 @@
             11,
             12,
             13,
-            14
+            14,
+            15
           ],
           "verified": true
         }
       ],
-      "sourceHash": "88710c80af4b175ea79de3f359fe6e151b25a4b0858513d1335541bc0d41075a",
-      "sourceRef": "konbu17/nemotron-sft-lora-with-cot",
-      "sourceRevision": "2026-04-13 05:08:53.973000"
+      "sourceHash": "d0845c3bced094a24352ce176a37b55fc24b329b70b268d41f18966a554ace3f",
+      "sourceRef": "dgxchen/training-with-unsloth-to-achieve-0-85-lb",
+      "sourceRevision": "2026-04-25 02:13:56.293000"
     },
     {
       "id": "nvidia-nemotron-model-reasoning-challenge-kienngx-nvidia-nemotron-trained-models-submission",
-      "title": "Nvidia Nemotron Outside Submission",
-      "summary": "Notebook code evidence identifies Transformer text model; each claim cites the source cell.",
+      "title": "Nvidia Nemotron Model Submission Pipeline",
+      "summary": "Pipeline loads a pre-trained LoRA-adapted Nemotron Nano 30B model and packages it for submission.",
       "task": {
-        "primary": "Classification",
+        "primary": "Forecasting",
         "secondary": []
       },
       "modalities": [
-        "Tabular"
+        "Text"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Accuracy",
       "competition": {
         "slug": "nvidia-nemotron-model-reasoning-challenge",
         "name": "nvidia-nemotron-model-reasoning-challenge",
@@ -1438,16 +844,16 @@
         "teamName": "just gambling",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "Transformer text model"
+        "LoRA fine-tuning"
       ],
       "pipeline": {
         "validation": [],
         "preprocessing": [],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Specifies model path version_14 for submission",
             "cellRefs": [
               15
             ]
@@ -1455,7 +861,14 @@
         ],
         "training": [],
         "inference": [],
-        "postprocessing": [],
+        "postprocessing": [
+          {
+            "text": "Zips model directory into submission.zip",
+            "cellRefs": [
+              15
+            ]
+          }
+        ],
         "ensembling": []
       },
       "evidence": [
@@ -1490,16 +903,16 @@
     },
     {
       "id": "nvidia-nemotron-model-reasoning-challenge-kienngx-nvidia-nemotron-training-cot-labels",
-      "title": "Add to Python path",
-      "summary": "Notebook code evidence identifies PyTorch, Transformer text model, Tabular feature preparation; each claim cites the source cell.",
+      "title": "Nemotron 30B LoRA Fine-tuning for Reasoning",
+      "summary": "Fine-tunes Nemotron-3 Nano 30B using LoRA on a subsampled reasoning dataset with chat-formatted training text, then saves adapter for submission.",
       "task": {
-        "primary": "Generation",
+        "primary": "Semantic Segmentation",
         "secondary": []
       },
       "modalities": [
         "Text"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Accuracy",
       "competition": {
         "slug": "nvidia-nemotron-model-reasoning-challenge",
         "name": "nvidia-nemotron-model-reasoning-challenge",
@@ -1513,47 +926,50 @@
         "teamName": "just gambling",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "Transformer text model",
-        "Tabular feature preparation"
+        "LoRA",
+        "SFTTrainer",
+        "Chat Template"
       ],
       "pipeline": {
         "validation": [],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Loads and subsamples dataset, converts to HF Dataset, formats training text",
             "cellRefs": [
-              2,
-              3
+              7,
+              9
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Loads base model, applies LoRA (rank=32), enables gradient checkpointing",
             "cellRefs": [
-              2,
-              3,
-              7,
-              8
+              10,
+              11
             ]
           }
         ],
         "training": [
           {
-            "text": "Notebook code uses PyTorch.",
+            "text": "Fine-tunes with SFTTrainer using cosine LR scheduler and gradient accumulation",
             "cellRefs": [
-              2,
-              3,
-              4,
-              5
+              11
             ]
           }
         ],
         "inference": [],
-        "postprocessing": [],
+        "postprocessing": [
+          {
+            "text": "Saves LoRA adapter and tokenizer, creates submission.zip",
+            "cellRefs": [
+              12,
+              14
+            ]
+          }
+        ],
         "ensembling": []
       },
       "evidence": [
@@ -1586,17 +1002,119 @@
       "sourceRevision": "2026-03-25 03:21:59.290000"
     },
     {
-      "id": "ai-mathematical-olympiad-progress-prize-3-pushkin05-qwen-3-4b-thinking-2507-in-under-6-minutes",
-      "title": "assert np.__version__ == \"2.2.0\", (f\"Numpy version is {np.__version__} instead of 2.2.0\")",
-      "summary": "Notebook code evidence identifies PyTorch, TensorFlow/Keras, Transformer text model, Tabular feature preparation; each claim cites the source cell.",
+      "id": "nvidia-nemotron-model-reasoning-challenge-kienngx-nvidia-nemotron-training-copy-run-instantly",
+      "title": "Solution Pipeline for NVIDIA Nemotron Model Reasoning Challenge",
+      "summary": "The solution involves preprocessing training data, applying LoRA fine-tuning to a large language model, training with specific hyperparameters, and packaging the adapter for submission.",
       "task": {
-        "primary": "Generation",
+        "primary": "Forecasting",
+        "secondary": [
+          "Regression",
+          "Classification"
+        ]
+      },
+      "modalities": [
+        "Text"
+      ],
+      "metric": "Accuracy",
+      "competition": {
+        "slug": "nvidia-nemotron-model-reasoning-challenge",
+        "name": "nvidia-nemotron-model-reasoning-challenge",
+        "endDate": "2026-06-15",
+        "url": "https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge"
+      },
+      "result": {
+        "rank": 377,
+        "teams": 4183,
+        "percentile": 9.01,
+        "teamName": "just gambling",
+        "award": null
+      },
+      "status": "emerging",
+      "methods": [
+        "LoRA",
+        "SFTTrainer",
+        "Chat Template",
+        "Zip Packaging"
+      ],
+      "pipeline": {
+        "validation": [],
+        "preprocessing": [
+          {
+            "text": "Converts training data to HuggingFace Dataset and constructs training text via chat template.",
+            "cellRefs": [
+              7,
+              9
+            ]
+          }
+        ],
+        "model": [
+          {
+            "text": "Loads Nemotron-3 Nano 30B model and applies LoRA configuration.",
+            "cellRefs": [
+              11
+            ]
+          }
+        ],
+        "training": [
+          {
+            "text": "Trains model using SFTTrainer with cosine learning rate scheduler and gradient accumulation.",
+            "cellRefs": [
+              11
+            ]
+          }
+        ],
+        "inference": [],
+        "postprocessing": [
+          {
+            "text": "Packages trained LoRA adapter into submission zip file.",
+            "cellRefs": [
+              14
+            ]
+          }
+        ],
+        "ensembling": []
+      },
+      "evidence": [
+        {
+          "owner": "kienngx",
+          "url": "https://www.kaggle.com/code/kienngx/nvidia-nemotron-training-copy-run-instantly",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "a50c6111bfbd34931a9d429ee13515479ca6401cd1f1bd6e823b81337db8b98d",
+      "sourceRef": "kienngx/nvidia-nemotron-training-copy-run-instantly",
+      "sourceRevision": "2026-03-22 15:40:45.550000"
+    },
+    {
+      "id": "ai-mathematical-olympiad-progress-prize-3-pushkin05-qwen-3-4b-thinking-2507-in-under-6-minutes",
+      "title": "AIMO3 LLM-based reasoning with code execution and majority voting",
+      "summary": "Uses a large language model to generate reasoning, extracts code and boxed answers, executes code, and aggregates answers via majority voting.",
+      "task": {
+        "primary": "Semantic Segmentation",
         "secondary": []
       },
       "modalities": [
         "Text"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Accuracy",
       "competition": {
         "slug": "ai-mathematical-olympiad-progress-prize-3",
         "name": "ai-mathematical-olympiad-progress-prize-3",
@@ -1610,53 +1128,89 @@
         "teamName": "pushkin05",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "TensorFlow/Keras",
-        "Transformer text model",
-        "Tabular feature preparation"
+        "LLM",
+        "Code Execution",
+        "Majority Voting"
       ],
       "pipeline": {
         "validation": [],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Extracts boxed answers using regex",
             "cellRefs": [
-              2,
-              4,
+              10
+            ]
+          },
+          {
+            "text": "Extracts Python code blocks from markdown",
+            "cellRefs": [
               12
+            ]
+          },
+          {
+            "text": "Prepends standard imports to extracted code",
+            "cellRefs": [
+              12
+            ]
+          },
+          {
+            "text": "Filters messages that have produced answers and tracks contributions",
+            "cellRefs": [
+              16
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Loads the LLM with fp8 precision and specified sampling parameters",
             "cellRefs": [
-              4,
-              6,
-              8,
+              7
+            ]
+          },
+          {
+            "text": "Retrieves the tokenizer from the loaded LLM",
+            "cellRefs": [
+              8
+            ]
+          },
+          {
+            "text": "Defines sampling parameters for generation",
+            "cellRefs": [
+              9
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Generates multiple reasoning prompts and iteratively refines them",
+            "cellRefs": [
+              19
+            ]
+          },
+          {
+            "text": "Formats model output into a prediction DataFrame",
+            "cellRefs": [
+              20
+            ]
+          },
+          {
+            "text": "Applies chat template and generates responses in batch",
+            "cellRefs": [
               15
             ]
           }
         ],
-        "training": [
+        "postprocessing": [
           {
-            "text": "Notebook code uses PyTorch.",
+            "text": "Selects the final answer via majority voting of extracted answers",
             "cellRefs": [
-              1,
-              4
-            ]
-          },
-          {
-            "text": "Notebook code uses TensorFlow/Keras.",
-            "cellRefs": [
-              0
+              11
             ]
           }
         ],
-        "inference": [],
-        "postprocessing": [],
         "ensembling": []
       },
       "evidence": [
@@ -1697,16 +1251,16 @@
     },
     {
       "id": "ai-mathematical-olympiad-progress-prize-3-sefixnep-vllm-server-and-custom-prompt",
-      "title": "Serve vLLM",
-      "summary": "Notebook code evidence identifies PyTorch, TensorFlow/Keras, Transformer text model, Tabular feature preparation; each claim cites the source cell.",
+      "title": "vLLM-powered mathematical reasoning with iterative prompting and weighted voting ensembling",
+      "summary": "The solution serves a large language model via vLLM, generates multiple candidate answers via prompting, extracts boxed answers, validates them, and ensembles via weighted voting to produce final integer answer.",
       "task": {
-        "primary": "Generation",
+        "primary": "Semantic Segmentation",
         "secondary": []
       },
       "modalities": [
-        "Text"
+        "Image"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Mean IoU",
       "competition": {
         "slug": "ai-mathematical-olympiad-progress-prize-3",
         "name": "ai-mathematical-olympiad-progress-prize-3",
@@ -1720,49 +1274,66 @@
         "teamName": "Because i'm happy",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "TensorFlow/Keras",
-        "Transformer text model",
-        "Tabular feature preparation"
+        "DeepLabV3+",
+        "ResNet-101"
       ],
       "pipeline": {
-        "validation": [],
-        "preprocessing": [
+        "validation": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Validates answer string as integer between 0 and 99999",
             "cellRefs": [
-              2,
-              21
+              14
             ]
           }
         ],
+        "preprocessing": [],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Starts vLLM server with GPT-OSS 120B model",
             "cellRefs": [
               6
             ]
+          },
+          {
+            "text": "Configures OpenAI client to point to local vLLM endpoint",
+            "cellRefs": [
+              7
+            ]
           }
         ],
-        "training": [
+        "training": [],
+        "inference": [
           {
-            "text": "Notebook code uses PyTorch.",
+            "text": "Generates solution by prompting model and extracting boxed answer",
             "cellRefs": [
-              2
+              16
             ]
           },
           {
-            "text": "Notebook code uses TensorFlow/Keras.",
+            "text": "Runs multiple generations in parallel and aggregates results",
             "cellRefs": [
-              1
+              18
             ]
           }
         ],
-        "inference": [],
-        "postprocessing": [],
-        "ensembling": []
+        "postprocessing": [
+          {
+            "text": "Extracts boxed LaTeX answer from model output",
+            "cellRefs": [
+              14
+            ]
+          }
+        ],
+        "ensembling": [
+          {
+            "text": "Aggregates multiple generation answers using weighted log-based voting",
+            "cellRefs": [
+              15
+            ]
+          }
+        ]
       },
       "evidence": [
         {
@@ -1801,131 +1372,17 @@
       "sourceRevision": "2025-11-27 22:05:16.643000"
     },
     {
-      "id": "ai-mathematical-olympiad-progress-prize-3-pranshubahadur-aimo-3-gpt-oss-20b-top-3-aimo2-pot-cot",
-      "title": "Data Processing",
-      "summary": "Notebook code evidence identifies PyTorch, TensorFlow/Keras, Transformer text model, Tabular feature preparation; each claim cites the source cell.",
-      "task": {
-        "primary": "Generation",
-        "secondary": []
-      },
-      "modalities": [
-        "Text"
-      ],
-      "metric": "Kaggle leaderboard score",
-      "competition": {
-        "slug": "ai-mathematical-olympiad-progress-prize-3",
-        "name": "ai-mathematical-olympiad-progress-prize-3",
-        "endDate": "2026-04-15",
-        "url": "https://www.kaggle.com/competitions/ai-mathematical-olympiad-progress-prize-3"
-      },
-      "result": {
-        "rank": 82,
-        "teams": 3451,
-        "percentile": 2.38,
-        "teamName": "Pranshu Bahadur",
-        "award": null
-      },
-      "status": "frontier",
-      "methods": [
-        "PyTorch",
-        "TensorFlow/Keras",
-        "Transformer text model",
-        "Tabular feature preparation"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              2,
-              6,
-              15,
-              21
-            ]
-          }
-        ],
-        "model": [
-          {
-            "text": "Notebook code uses Transformer text model.",
-            "cellRefs": [
-              6,
-              8,
-              11,
-              16
-            ]
-          }
-        ],
-        "training": [
-          {
-            "text": "Notebook code uses PyTorch.",
-            "cellRefs": [
-              1,
-              4,
-              5,
-              6
-            ]
-          },
-          {
-            "text": "Notebook code uses TensorFlow/Keras.",
-            "cellRefs": [
-              0
-            ]
-          }
-        ],
-        "inference": [],
-        "postprocessing": [],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "pranshubahadur",
-          "url": "https://www.kaggle.com/code/pranshubahadur/aimo-3-gpt-oss-20b-top-3-aimo2-pot-cot",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "0de29900b5c1c571185ac9f08ee0a4588d639e72ace530f6b75f7be180cf41e8",
-      "sourceRef": "pranshubahadur/aimo-3-gpt-oss-20b-top-3-aimo2-pot-cot",
-      "sourceRevision": "2025-11-27 04:31:56.523000"
-    },
-    {
       "id": "ai-mathematical-olympiad-progress-prize-3-pranshubahadur-aimo3-dapi-is-vllm-si-top-3-aimo2-pot-cot",
-      "title": "=========================================================================================",
-      "summary": "Notebook code evidence identifies PyTorch, TensorFlow/Keras, Transformer text model, Prediction post-processing; each claim cites the source cell.",
+      "title": "AIMO 3: Difficulty-Aware Phased Inference with vLLM and Consensus Voting",
+      "summary": "Solution uses vLLM to serve a GPT-OSS-120B model, generates multiple code solutions via API, extracts answers via code execution, and applies majority voting with rescue strategies for final answer.",
       "task": {
-        "primary": "Generation",
+        "primary": "Semantic Segmentation",
         "secondary": []
       },
       "modalities": [
-        "Image",
         "Text"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Accuracy",
       "competition": {
         "slug": "ai-mathematical-olympiad-progress-prize-3",
         "name": "ai-mathematical-olympiad-progress-prize-3",
@@ -1939,60 +1396,56 @@
         "teamName": "Pranshu Bahadur",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "TensorFlow/Keras",
-        "Transformer text model",
-        "Prediction post-processing",
-        "Tabular feature preparation"
+        "vLLM",
+        "Consensus Voting",
+        "Code Execution",
+        "Majority Voting"
       ],
       "pipeline": {
         "validation": [],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Extracts question string from input DataFrame",
             "cellRefs": [
-              3,
-              5,
-              8
+              5
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Uses vLLM to serve GPT-OSS-120B model for text generation",
             "cellRefs": [
               5
             ]
           }
         ],
-        "training": [
+        "training": [],
+        "inference": [
           {
-            "text": "Notebook code uses PyTorch.",
+            "text": "Generates candidate solutions via vLLM API with temperature and max_tokens settings",
             "cellRefs": [
-              3,
-              4,
               5
-            ]
-          },
-          {
-            "text": "Notebook code uses TensorFlow/Keras.",
-            "cellRefs": [
-              1
             ]
           }
         ],
-        "inference": [],
         "postprocessing": [
           {
-            "text": "Notebook code uses Prediction post-processing.",
+            "text": "Extracts integer answer from model-generated code execution output",
             "cellRefs": [
               5
             ]
           }
         ],
-        "ensembling": []
+        "ensembling": [
+          {
+            "text": "Uses majority voting across multiple model samples for final answer",
+            "cellRefs": [
+              5
+            ]
+          }
+        ]
       },
       "evidence": [
         {
@@ -2019,16 +1472,16 @@
     },
     {
       "id": "ai-mathematical-olympiad-progress-prize-3-pranshubahadur-aimo3-4bit-forge-deepseekv3-2-345b-86b",
-      "title": "--- 1. CLEANUP ---",
-      "summary": "Notebook code evidence identifies PyTorch, Transformer text model, Tabular feature preparation; each claim cites the source cell.",
+      "title": "DeepSeek V3.2 Sparse MoE vLLM Inference Pipeline for AIMO Progress Prize",
+      "summary": "Notebook sets up a quantized DeepSeek-V3.2 model with custom sparse MoE kernels, loads it via vLLM, and runs greedy generation on mathematical problems.",
       "task": {
-        "primary": "Generation",
+        "primary": "Instance Segmentation",
         "secondary": []
       },
       "modalities": [
         "Text"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Accuracy",
       "competition": {
         "slug": "ai-mathematical-olympiad-progress-prize-3",
         "name": "ai-mathematical-olympiad-progress-prize-3",
@@ -2042,46 +1495,32 @@
         "teamName": "Pranshu Bahadur",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "Transformer text model",
-        "Tabular feature preparation"
+        "Custom Sparse MoE Kernel",
+        "vLLM Inference",
+        "4-bit GPTQ Quantization"
       ],
       "pipeline": {
         "validation": [],
-        "preprocessing": [
-          {
-            "text": "Notebook code uses Tabular feature preparation.",
-            "cellRefs": [
-              17,
-              28,
-              32
-            ]
-          }
-        ],
+        "preprocessing": [],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Loads DeepSeek-V3.2-Exp model with 4-bit sparse GPTQ quantization via vLLM",
             "cellRefs": [
-              16,
-              19,
-              20,
-              24
+              16
             ]
           }
         ],
-        "training": [
+        "training": [],
+        "inference": [
           {
-            "text": "Notebook code uses PyTorch.",
+            "text": "Generates answers using greedy sampling (temperature=0.0) with max_tokens=4096",
             "cellRefs": [
-              1,
-              7,
-              10
+              20
             ]
           }
         ],
-        "inference": [],
         "postprocessing": [],
         "ensembling": []
       },
@@ -2134,8 +1573,8 @@
     },
     {
       "id": "ai-mathematical-olympiad-progress-prize-3-defdet-lora-merge-and-upload",
-      "title": "Login to Kaggle API",
-      "summary": "Notebook code evidence identifies PyTorch, TensorFlow/Keras, Transformer text model; each claim cites the source cell.",
+      "title": "Model preparation for GPT-OSS 20B with LoRA merging and MXFP4 quantization",
+      "summary": "Loads base model, merges LoRA adapters, quantizes to MXFP4, and saves the model.",
       "task": {
         "primary": "Generation",
         "secondary": []
@@ -2143,7 +1582,7 @@
       "modalities": [
         "Text"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "None",
       "competition": {
         "slug": "ai-mathematical-olympiad-progress-prize-3",
         "name": "ai-mathematical-olympiad-progress-prize-3",
@@ -2157,40 +1596,26 @@
         "teamName": "brawstars esports",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "PyTorch",
-        "TensorFlow/Keras",
-        "Transformer text model"
+        "Model loading",
+        "LoRA merging",
+        "Quantization"
       ],
       "pipeline": {
         "validation": [],
         "preprocessing": [],
         "model": [
           {
-            "text": "Notebook code uses Transformer text model.",
+            "text": "Loads base model, merges LoRA adapters, quantizes to MXFP4",
             "cellRefs": [
               6,
-              12
+              8,
+              10
             ]
           }
         ],
-        "training": [
-          {
-            "text": "Notebook code uses PyTorch.",
-            "cellRefs": [
-              1,
-              6,
-              8
-            ]
-          },
-          {
-            "text": "Notebook code uses TensorFlow/Keras.",
-            "cellRefs": [
-              0
-            ]
-          }
-        ],
+        "training": [],
         "inference": [],
         "postprocessing": [],
         "ensembling": []
@@ -2223,17 +1648,134 @@
       "sourceRevision": "2025-12-03 16:32:05.827000"
     },
     {
-      "id": "march-machine-learning-mania-2026-harrisonhoran-harry-march-mania-2026-notebook",
-      "title": "Toolbox",
-      "summary": "Notebook code evidence identifies XGBoost, Prediction post-processing, Tabular feature preparation; each claim cites the source cell.",
+      "id": "ai-mathematical-olympiad-progress-prize-3-ibraman5-aimo3-solver",
+      "title": "AIMO3 Multi-Strategy Math Solver",
+      "summary": "Uses symbolic math, pattern recognition, and optional LLM to solve math problems with fallback to number extraction.",
       "task": {
-        "primary": "Ranking",
+        "primary": "Semantic Segmentation",
+        "secondary": []
+      },
+      "modalities": [
+        "Text"
+      ],
+      "metric": "Accuracy",
+      "competition": {
+        "slug": "ai-mathematical-olympiad-progress-prize-3",
+        "name": "ai-mathematical-olympiad-progress-prize-3",
+        "endDate": "2026-04-15",
+        "url": "https://www.kaggle.com/competitions/ai-mathematical-olympiad-progress-prize-3"
+      },
+      "result": {
+        "rank": 288,
+        "teams": 3451,
+        "percentile": 8.35,
+        "teamName": "Ibraheem Almansour",
+        "award": null
+      },
+      "status": "emerging",
+      "methods": [
+        "Symbolic Math",
+        "Pattern Recognition",
+        "LLM Reasoning",
+        "Fallback Extraction"
+      ],
+      "pipeline": {
+        "validation": [
+          {
+            "text": "Uses clamp_answer to validate answer in range [0,99999]",
+            "cellRefs": [
+              6
+            ]
+          }
+        ],
+        "preprocessing": [
+          {
+            "text": "Extracts numbers from problem text using regex",
+            "cellRefs": [
+              6
+            ]
+          }
+        ],
+        "model": [
+          {
+            "text": "Uses multi-strategy solver (symbolic, pattern, LLM, fallback)",
+            "cellRefs": [
+              14
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Calls solve_problem on each problem in batch",
+            "cellRefs": [
+              16
+            ]
+          }
+        ],
+        "postprocessing": [
+          {
+            "text": "Applies clamp_answer to ensure final answer in [0,99999]",
+            "cellRefs": [
+              6
+            ]
+          }
+        ],
+        "ensembling": [
+          {
+            "text": "Selects first successful strategy from symbolic, pattern, LLM, fallback",
+            "cellRefs": [
+              14
+            ]
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "owner": "ibraman5",
+          "url": "https://www.kaggle.com/code/ibraman5/aimo3-solver",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "1b93731ff9f96c4916964d9c11efa3038b32b6e2886754342dc95575643081b9",
+      "sourceRef": "ibraman5/aimo3-solver",
+      "sourceRevision": "2026-03-04 21:18:09.953000"
+    },
+    {
+      "id": "march-machine-learning-mania-2026-makarbaderko-abobus-solution-7th-place",
+      "title": "March Machine Learning Mania 2026 Solution Pipeline",
+      "summary": "Pipeline loads tournament data, engineers features (seeds, Elo, GLM quality, advanced stats), trains season‑wise XGBoost models, averages predictions, calibrates with isotonic regression and sharpening, then outputs calibrated probabilities.",
+      "task": {
+        "primary": "Classification",
         "secondary": []
       },
       "modalities": [
         "Tabular"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "LogLoss",
       "competition": {
         "slug": "march-machine-learning-mania-2026",
         "name": "march-machine-learning-mania-2026",
@@ -2241,57 +1783,96 @@
         "url": "https://www.kaggle.com/competitions/march-machine-learning-mania-2026"
       },
       "result": {
-        "rank": 1,
+        "rank": 7,
         "teams": 3462,
-        "percentile": 0.03,
-        "teamName": "harry",
+        "percentile": 0.2,
+        "teamName": "abobus",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "XGBoost",
-        "Prediction post-processing",
-        "Tabular feature preparation"
+        "Feature Engineering",
+        "Gradient Boosting",
+        "Isotonic Regression",
+        "Model Averaging"
       ],
       "pipeline": {
-        "validation": [],
+        "validation": [
+          {
+            "text": "Computes AUC and MAE metrics",
+            "cellRefs": [
+              12,
+              13,
+              16,
+              19
+            ]
+          }
+        ],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Creates features including seeds, Elo, GLM quality, and advanced stats",
             "cellRefs": [
-              2,
-              3
+              0,
+              3,
+              4,
+              5,
+              9,
+              11,
+              14,
+              21
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses XGBoost.",
+            "text": "Uses XGBoost with gbtree booster",
             "cellRefs": [
-              2,
-              3,
-              54,
-              55
+              15
             ]
           }
         ],
-        "training": [],
-        "inference": [],
+        "training": [
+          {
+            "text": "Trains one XGBoost model per season (leave‑one‑season‑out)",
+            "cellRefs": [
+              16
+            ]
+          }
+        ],
+        "inference": [
+          {
+            "text": "Generates margin predictions for test data and averages across models",
+            "cellRefs": [
+              20,
+              22
+            ]
+          }
+        ],
         "postprocessing": [
           {
-            "text": "Notebook code uses Prediction post-processing.",
+            "text": "Applies isotonic regression calibration and probability sharpening",
             "cellRefs": [
-              58,
-              70
+              17,
+              18,
+              22,
+              23,
+              24
             ]
           }
         ],
-        "ensembling": []
+        "ensembling": [
+          {
+            "text": "Averages predictions from season‑specific models",
+            "cellRefs": [
+              22
+            ]
+          }
+        ]
       },
       "evidence": [
         {
-          "owner": "harrisonhoran",
-          "url": "https://www.kaggle.com/code/harrisonhoran/harry-march-mania-2026-notebook",
+          "owner": "makarbaderko",
+          "url": "https://www.kaggle.com/code/makarbaderko/abobus-solution-7th-place",
           "version": 1,
           "cellRefs": [
             0,
@@ -2319,73 +1900,27 @@
             22,
             23,
             24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33,
-            34,
-            35,
-            36,
-            37,
-            38,
-            39,
-            40,
-            41,
-            42,
-            43,
-            44,
-            45,
-            46,
-            47,
-            48,
-            49,
-            50,
-            51,
-            52,
-            53,
-            54,
-            55,
-            56,
-            57,
-            58,
-            59,
-            60,
-            61,
-            62,
-            63,
-            64,
-            65,
-            66,
-            67,
-            68,
-            69,
-            70,
-            71
+            25
           ],
           "verified": true
         }
       ],
-      "sourceHash": "b2fd570da332fdcb54665b880d507add8481a9a718d1bf302403e36cad6c4d89",
-      "sourceRef": "harrisonhoran/harry-march-mania-2026-notebook",
-      "sourceRevision": "2026-04-08 21:18:14.803000"
+      "sourceHash": "af2e76c332aead66d9b696ab2db92161850db94b4902fc8911f7526e4e2edd73",
+      "sourceRef": "makarbaderko/abobus-solution-7th-place",
+      "sourceRevision": "2026-04-09 17:16:46.897000"
     },
     {
-      "id": "march-machine-learning-mania-2026-kostyaatarik-28th-place-solution",
-      "title": "W -> women's basketball, M -> men's basketball",
-      "summary": "Notebook code evidence identifies XGBoost, Prediction post-processing, Tabular feature preparation; each claim cites the source cell.",
+      "id": "march-machine-learning-mania-2026-pilkwang-mmlm2026-baseline-pipeline-step-by-step",
+      "title": "March Machine Learning Mania 2026 Baseline Pipeline",
+      "summary": "The pipeline constructs team features, builds pairwise training frames, validates with rolling OOF, trains logistic regression models, infers on submission data, clips predictions, and blends core and expanded models.",
       "task": {
-        "primary": "Regression",
+        "primary": "Classification",
         "secondary": []
       },
       "modalities": [
         "Tabular"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Brier Score",
       "competition": {
         "slug": "march-machine-learning-mania-2026",
         "name": "march-machine-learning-mania-2026",
@@ -2393,57 +1928,83 @@
         "url": "https://www.kaggle.com/competitions/march-machine-learning-mania-2026"
       },
       "result": {
-        "rank": 28,
+        "rank": 92,
         "teams": 3462,
-        "percentile": 0.81,
-        "teamName": "Kostya Atarik",
+        "percentile": 2.66,
+        "teamName": "Pilkwang Kim",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
-        "XGBoost",
-        "Prediction post-processing",
-        "Tabular feature preparation"
+        "Feature Engineering",
+        "Logistic Regression",
+        "Rolling OOF Validation",
+        "Model Blending"
       ],
       "pipeline": {
-        "validation": [],
+        "validation": [
+          {
+            "text": "Uses rolling OOF validation across seasons 2021-2025 to evaluate models",
+            "cellRefs": [
+              19
+            ]
+          }
+        ],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Constructs team feature store and pairwise tournament training frame",
             "cellRefs": [
-              0
+              15,
+              17
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses XGBoost.",
+            "text": "Employs a pipeline with median imputation, standard scaling, and logistic regression",
             "cellRefs": [
-              15,
-              16,
-              22
+              1
             ]
           }
         ],
-        "training": [],
-        "inference": [],
-        "postprocessing": [
+        "training": [
           {
-            "text": "Notebook code uses Prediction post-processing.",
+            "text": "Trains core and expanded models on the full training dataset (seasons up to 2025)",
             "cellRefs": [
-              11,
-              18,
-              22,
+              21
+            ]
+          }
+        ],
+        "inference": [
+          {
+            "text": "Predicts probabilities for submission pairs using core and expanded models",
+            "cellRefs": [
               23
             ]
           }
         ],
-        "ensembling": []
+        "postprocessing": [
+          {
+            "text": "Clips predicted probabilities to [0.02, 0.98] to avoid extreme values",
+            "cellRefs": [
+              23
+            ]
+          }
+        ],
+        "ensembling": [
+          {
+            "text": "Blends core and expanded model predictions using a weight optimized on OOF Brier score",
+            "cellRefs": [
+              19,
+              23
+            ]
+          }
+        ]
       },
       "evidence": [
         {
-          "owner": "kostyaatarik",
-          "url": "https://www.kaggle.com/code/kostyaatarik/28th-place-solution",
+          "owner": "pilkwang",
+          "url": "https://www.kaggle.com/code/pilkwang/mmlm2026-baseline-pipeline-step-by-step",
           "version": 1,
           "cellRefs": [
             0,
@@ -2470,27 +2031,103 @@
             21,
             22,
             23,
-            24
+            24,
+            25
           ],
           "verified": true
         }
       ],
-      "sourceHash": "dc4bf19a22f41f6034ac1a9657802dfc87a9835a600bb14ffff1e19a8506470b",
-      "sourceRef": "kostyaatarik/28th-place-solution",
-      "sourceRevision": "2026-04-04 15:19:34.667000"
+      "sourceHash": "dd0a2b9b32926fb01fae351b4a794bd67872df26146e210f6bcedfa146a239fe",
+      "sourceRef": "pilkwang/mmlm2026-baseline-pipeline-step-by-step",
+      "sourceRevision": "2026-02-21 07:30:58.950000"
     },
     {
-      "id": "march-machine-learning-mania-2026-kacchanwriting-2025-1st-place-solution-modeh7-2026-adaptation",
-      "title": "NCAA March Mania 2026",
-      "summary": "Notebook code evidence identifies XGBoost, Ensembling, Prediction post-processing, Tabular feature preparation; each claim cites the source cell.",
+      "id": "march-machine-learning-mania-2026-pierridotite-top-1-solution-the-4-model-blend",
+      "title": "Weighted Blend of Pre‑Generated Predictions for March Machine Learning Mania 2026",
+      "summary": "Loads four model prediction files, filters to 2026 IDs, drops missing values, forms a weighted average, clips the result, and writes a submission file.",
       "task": {
-        "primary": "Regression",
+        "primary": "Classification",
         "secondary": []
       },
       "modalities": [
-        "Image"
+        "Tabular"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "LogLoss",
+      "competition": {
+        "slug": "march-machine-learning-mania-2026",
+        "name": "march-machine-learning-mania-2026",
+        "endDate": "2026-04-07",
+        "url": "https://www.kaggle.com/competitions/march-machine-learning-mania-2026"
+      },
+      "result": {
+        "rank": 97,
+        "teams": 3462,
+        "percentile": 2.8,
+        "teamName": "Pierre Raffalli",
+        "award": null
+      },
+      "status": "emerging",
+      "methods": [
+        "Weighted averaging",
+        "Clipping"
+      ],
+      "pipeline": {
+        "validation": [],
+        "preprocessing": [
+          {
+            "text": "Loads prediction files and filters for 2026 IDs",
+            "cellRefs": [
+              0
+            ]
+          }
+        ],
+        "model": [],
+        "training": [],
+        "inference": [],
+        "postprocessing": [
+          {
+            "text": "Clips blended predictions and prepares submission format",
+            "cellRefs": [
+              0
+            ]
+          }
+        ],
+        "ensembling": [
+          {
+            "text": "Computes weighted average of XGB, Elo, TabPFN, and Raddar predictions",
+            "cellRefs": [
+              0
+            ]
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "owner": "pierridotite",
+          "url": "https://www.kaggle.com/code/pierridotite/top-1-solution-the-4-model-blend",
+          "version": 1,
+          "cellRefs": [
+            0
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "8616b0f7f5cfe6ae8bc94c98c3b3c6f75aad0159fe3f648bc84c275a326e482f",
+      "sourceRef": "pierridotite/top-1-solution-the-4-model-blend",
+      "sourceRevision": "2026-03-24 12:51:23.923000"
+    },
+    {
+      "id": "march-machine-learning-mania-2026-kacchanwriting-2025-1st-place-solution-modeh7-2026-adaptation",
+      "title": "NCAA March Mania 2026 Solution Pipeline",
+      "summary": "Predicts tournament win probabilities using XGRegression on point differential with spline calibration and ensemble of leave-one-season-out models.",
+      "task": {
+        "primary": "Classification",
+        "secondary": []
+      },
+      "modalities": [
+        "Tabular"
+      ],
+      "metric": "LogLoss",
       "competition": {
         "slug": "march-machine-learning-mania-2026",
         "name": "march-machine-learning-mania-2026",
@@ -2504,51 +2141,79 @@
         "teamName": "Ikki Katsuyama",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
         "XGBoost",
-        "Ensembling",
-        "Prediction post-processing",
-        "Tabular feature preparation"
+        "Feature Engineering",
+        "Spline Calibration",
+        "Ensemble Averaging"
       ],
       "pipeline": {
-        "validation": [],
+        "validation": [
+          {
+            "text": "Evaluates models using MAE and Brier score via leave-one-season-out",
+            "cellRefs": [
+              41,
+              42,
+              43,
+              44
+            ]
+          }
+        ],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Engineers features including seed differences, season-averaged box scores, Elo ratings, and GLM team quality",
             "cellRefs": [
-              3
+              14,
+              19,
+              26,
+              28,
+              33
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses XGBoost.",
+            "text": "Uses XGBoost regression with reg:squarederror objective",
             "cellRefs": [
-              0,
-              40,
-              41,
+              39,
+              40
+            ]
+          }
+        ],
+        "training": [
+          {
+            "text": "Trains XGBoost models using leave-one-season-out cross-validation",
+            "cellRefs": [
+              41
+            ]
+          }
+        ],
+        "inference": [
+          {
+            "text": "Generates predictions for submission by averaging model outputs across seasons",
+            "cellRefs": [
+              46,
+              47,
               48
             ]
           }
         ],
-        "training": [],
-        "inference": [],
         "postprocessing": [
           {
-            "text": "Notebook code uses Prediction post-processing.",
+            "text": "Applies UnivariateSpline to convert point differential predictions to win probabilities",
             "cellRefs": [
-              35,
+              42,
               43,
-              48
+              44
             ]
           }
         ],
         "ensembling": [
           {
-            "text": "Notebook code uses Ensembling.",
+            "text": "Ensembles predictions by averaging probabilities from leave-one-season-out models",
             "cellRefs": [
-              0
+              48
             ]
           }
         ]
@@ -2621,16 +2286,16 @@
     },
     {
       "id": "march-machine-learning-mania-2026-ravi20076-ncaa2026-public-baseline-v1",
-      "title": "**FOREWORD**",
-      "summary": "Notebook code evidence identifies XGBoost, Prediction post-processing, Tabular feature preparation; each claim cites the source cell.",
+      "title": "XGBoost with Elo and Team Quality Features for March Machine Learning Mania 2026",
+      "summary": "Uses leave-one-season-out validation, extensive feature engineering including seeds, Elo, and GLM-derived team quality, trains XGBoost regressors per season, calibrates predictions with a spline, and ensembles season-specific models.",
       "task": {
-        "primary": "Regression",
+        "primary": "Ranking",
         "secondary": []
       },
       "modalities": [
-        "Image"
+        "Tabular"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "LogLoss",
       "competition": {
         "slug": "march-machine-learning-mania-2026",
         "name": "march-machine-learning-mania-2026",
@@ -2647,42 +2312,130 @@
       "status": "frontier",
       "methods": [
         "XGBoost",
-        "Prediction post-processing",
-        "Tabular feature preparation"
+        "Feature Engineering",
+        "Calibration",
+        "Ensembling"
       ],
       "pipeline": {
-        "validation": [],
+        "validation": [
+          {
+            "text": "Uses leave-one-season-out cross-validation to compute MAE",
+            "cellRefs": [
+              34
+            ]
+          },
+          {
+            "text": "Evaluates feature AUC using ROC AUC score",
+            "cellRefs": [
+              29,
+              30
+            ]
+          }
+        ],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Loads regular season and tournament results for men and women",
             "cellRefs": [
-              2
+              5
+            ]
+          },
+          {
+            "text": "Doubles dataset with swapped team positions and adjusts for overtime",
+            "cellRefs": [
+              11
+            ]
+          },
+          {
+            "text": "Computes seed difference and Elo ratings as features",
+            "cellRefs": [
+              15,
+              21
+            ]
+          },
+          {
+            "text": "Engineers team quality via GLM",
+            "cellRefs": [
+              27
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses XGBoost.",
+            "text": "Uses XGBoost gradient boosted trees with hist tree method",
             "cellRefs": [
-              2,
-              34,
-              38
+              32,
+              33
+            ]
+          },
+          {
+            "text": "Predicts point difference as regression target",
+            "cellRefs": [
+              32
+            ]
+          },
+          {
+            "text": "Uses predefined feature set including seeds, Elo, quality, and aggregated box stats",
+            "cellRefs": [
+              32
             ]
           }
         ],
-        "training": [],
-        "inference": [],
+        "training": [
+          {
+            "text": "Trains separate XGBoost model per season using leave-one-season-out scheme",
+            "cellRefs": [
+              34
+            ]
+          },
+          {
+            "text": "Uses hyperparameters: eta=0.0075, subsample=0.6, max_depth=4",
+            "cellRefs": [
+              33
+            ]
+          }
+        ],
+        "inference": [
+          {
+            "text": "Generates predictions for test matches by averaging outputs from all season-specific models",
+            "cellRefs": [
+              38
+            ]
+          },
+          {
+            "text": "Applies spline calibration to raw margin predictions",
+            "cellRefs": [
+              36
+            ]
+          },
+          {
+            "text": "Clips calibrated probabilities to [0.02,0.98]",
+            "cellRefs": [
+              36
+            ]
+          }
+        ],
         "postprocessing": [
           {
-            "text": "Notebook code uses Prediction post-processing.",
+            "text": "Converts calibrated probabilities to final submission format",
             "cellRefs": [
-              28,
-              36,
+              38
+            ]
+          },
+          {
+            "text": "Averages predictions across models as ensemble",
+            "cellRefs": [
               38
             ]
           }
         ],
-        "ensembling": []
+        "ensembling": [
+          {
+            "text": "Averages probability predictions from each season's model to produce final ensemble prediction",
+            "cellRefs": [
+              38
+            ]
+          }
+        ]
       },
       "evidence": [
         {
@@ -2738,16 +2491,16 @@
     },
     {
       "id": "march-machine-learning-mania-2026-ravi20076-ncaa2026-public-baseline-v2",
-      "title": "**FOREWORD**",
-      "summary": "Notebook code evidence identifies XGBoost, Cross-validation, Prediction post-processing, Tabular feature preparation; each claim cites the source cell.",
+      "title": "March Machine Learning Mania 2026 Solution Pipeline",
+      "summary": "Feature engineering with season statistics, team quality, and seeds; XGBoost model with custom Cauchy objective; repeated cross-validation; spline calibration; ensembling by averaging predictions.",
       "task": {
-        "primary": "Regression",
+        "primary": "Classification",
         "secondary": []
       },
       "modalities": [
-        "Text"
+        "Tabular"
       ],
-      "metric": "Kaggle leaderboard score",
+      "metric": "Brier Score",
       "competition": {
         "slug": "march-machine-learning-mania-2026",
         "name": "march-machine-learning-mania-2026",
@@ -2761,54 +2514,118 @@
         "teamName": "Ravi Ramakrishnan",
         "award": null
       },
-      "status": "frontier",
+      "status": "emerging",
       "methods": [
+        "Feature Engineering",
         "XGBoost",
-        "Cross-validation",
-        "Prediction post-processing",
-        "Tabular feature preparation"
+        "Cross Validation",
+        "Spline Calibration"
       ],
       "pipeline": {
         "validation": [
           {
-            "text": "Notebook code uses Cross-validation.",
+            "text": "Evaluates model using out-of-fold predictions and Brier score",
             "cellRefs": [
-              4,
+              11
+            ]
+          },
+          {
+            "text": "Computes calibration via UnivariateSpline on OOF predictions",
+            "cellRefs": [
               11
             ]
           }
         ],
         "preprocessing": [
           {
-            "text": "Notebook code uses Tabular feature preparation.",
+            "text": "Defines prepare_data function to swap winner/loser columns and encode location",
             "cellRefs": [
-              4
+              7
+            ]
+          },
+          {
+            "text": "Computes season statistics, last 14-day win ratios, team quality via GLM, and seed differences",
+            "cellRefs": [
+              8
+            ]
+          },
+          {
+            "text": "Creates feature matrix X and target vector y from engineered features",
+            "cellRefs": [
+              8
             ]
           }
         ],
         "model": [
           {
-            "text": "Notebook code uses XGBoost.",
+            "text": "Defines custom Cauchy objective function for XGBoost",
             "cellRefs": [
-              3,
-              4,
-              11,
+              10
+            ]
+          },
+          {
+            "text": "Sets XGBoost hyperparameters (learning_rate 0.02, subsample 0.35, colsample_bytree 0.7, etc.)",
+            "cellRefs": [
+              11
+            ]
+          }
+        ],
+        "training": [
+          {
+            "text": "Performs repeated cross-validation with XGBoost using custom objective and early stopping",
+            "cellRefs": [
+              11
+            ]
+          },
+          {
+            "text": "Computes out-of-fold predictions and clips to [-30,30] for each repeat",
+            "cellRefs": [
+              11
+            ]
+          },
+          {
+            "text": "Trains final models on full data with increased boosting rounds for submission",
+            "cellRefs": [
               13
             ]
           }
         ],
-        "training": [],
-        "inference": [],
+        "inference": [
+          {
+            "text": "Generates predictions for submission data using trained models",
+            "cellRefs": [
+              13
+            ]
+          },
+          {
+            "text": "Applies spline calibration and clipping to [low, high] bounds",
+            "cellRefs": [
+              13
+            ]
+          }
+        ],
         "postprocessing": [
           {
-            "text": "Notebook code uses Prediction post-processing.",
+            "text": "Averages predictions across repeated models to produce final submission probabilities",
             "cellRefs": [
-              11,
+              13
+            ]
+          },
+          {
+            "text": "Clips final predictions to low/high bounds (0.02, 0.98)",
+            "cellRefs": [
               13
             ]
           }
         ],
-        "ensembling": []
+        "ensembling": [
+          {
+            "text": "Averages predictions from multiple XGBoost models trained with different random seeds",
+            "cellRefs": [
+              13
+            ]
+          }
+        ]
       },
       "evidence": [
         {
@@ -2837,6 +2654,504 @@
       "sourceHash": "1234a116124e18347b4ad587f6a63a8c68be3933bda6af36cd872092d09abe3c",
       "sourceRef": "ravi20076/ncaa2026-public-baseline-v2",
       "sourceRevision": "2026-03-06 18:32:16.343000"
+    },
+    {
+      "id": "stanford-rna-3d-folding-2-meenalsinha-optimized-rna-prediction",
+      "title": "Stanford RNA 3D Folding Solution Pipeline",
+      "summary": "Pipeline uses template-based modeling and Protenix for RNA structure prediction with ensembling.",
+      "task": {
+        "primary": "Ranking",
+        "secondary": []
+      },
+      "modalities": [
+        "Text",
+        "Image"
+      ],
+      "metric": "F1",
+      "competition": {
+        "slug": "stanford-rna-3d-folding-2",
+        "name": "stanford-rna-3d-folding-2",
+        "endDate": "2026-03-25",
+        "url": "https://www.kaggle.com/competitions/stanford-rna-3d-folding-2"
+      },
+      "result": {
+        "rank": 75,
+        "teams": 1877,
+        "percentile": 4.0,
+        "teamName": "Meenal Sinha",
+        "award": null
+      },
+      "status": "frontier",
+      "methods": [
+        "Template-based modeling",
+        "Protenix",
+        "Ensembling"
+      ],
+      "pipeline": {
+        "validation": [
+          {
+            "text": "Loads validation data for template pool",
+            "cellRefs": [
+              5
+            ]
+          }
+        ],
+        "preprocessing": [
+          {
+            "text": "Prepares model inputs and configurations",
+            "cellRefs": [
+              5
+            ]
+          }
+        ],
+        "model": [
+          {
+            "text": "Loads Protenix pre-trained model",
+            "cellRefs": [
+              5
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Executes Protenix and template-based modeling inference",
+            "cellRefs": [
+              5
+            ]
+          }
+        ],
+        "postprocessing": [
+          {
+            "text": "Stitches chunks and combines predictions for submission",
+            "cellRefs": [
+              5
+            ]
+          }
+        ],
+        "ensembling": [
+          {
+            "text": "Merges TBM, Protenix, and de-novo predictions",
+            "cellRefs": [
+              5
+            ]
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "owner": "meenalsinha",
+          "url": "https://www.kaggle.com/code/meenalsinha/optimized-rna-prediction",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "84dafa7b6a4823d912078123addbb17905675e5637bf8ed774d816817c30329c",
+      "sourceRef": "meenalsinha/optimized-rna-prediction",
+      "sourceRevision": "2026-03-19 16:05:09.857000"
+    },
+    {
+      "id": "stanford-rna-3d-folding-2-kami1976-stanford-rna-3d-folding-part-2a19",
+      "title": "Template-based RNA 3D folding with adaptive constraints",
+      "summary": "The solution retrieves similar known RNA structures via global alignment, transfers coordinates, applies geometry‑based refinements, and creates an ensemble of predictions for each test sequence.",
+      "task": {
+        "primary": "Ranking",
+        "secondary": []
+      },
+      "modalities": [
+        "Text",
+        "Tabular"
+      ],
+      "metric": "TM-score",
+      "competition": {
+        "slug": "stanford-rna-3d-folding-2",
+        "name": "stanford-rna-3d-folding-2",
+        "endDate": "2026-03-25",
+        "url": "https://www.kaggle.com/competitions/stanford-rna-3d-folding-2"
+      },
+      "result": {
+        "rank": 87,
+        "teams": 1877,
+        "percentile": 4.64,
+        "teamName": "bianfu",
+        "award": null
+      },
+      "status": "frontier",
+      "methods": [
+        "Sequence alignment",
+        "Coordinate transfer",
+        "Geometric refinement",
+        "Ensembling"
+      ],
+      "pipeline": {
+        "validation": [],
+        "preprocessing": [
+          {
+            "text": "Builds chain segments map and processes labels into coordinate dictionary",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "model": [
+          {
+            "text": "Uses PairwiseAligner to find similar sequences and adapts template coordinates",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Iterates over test sequences to predict RNA structures using template-based modeling",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "postprocessing": [
+          {
+            "text": "Clips predicted coordinates to competition range and saves submission CSV",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "ensembling": [
+          {
+            "text": "Generates multiple predictions per target and selects the first five as ensemble output",
+            "cellRefs": [
+              1
+            ]
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "owner": "kami1976",
+          "url": "https://www.kaggle.com/code/kami1976/stanford-rna-3d-folding-part-2a19",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "6f9ac61084aa57b6de1c766bd18b8ec44aed4223d2a1e67e47d775a652f837e4",
+      "sourceRef": "kami1976/stanford-rna-3d-folding-part-2a19",
+      "sourceRevision": "2026-02-01 17:28:51.790000"
+    },
+    {
+      "id": "stanford-rna-3d-folding-2-kami1976-stanford-rna-3d-folding-part-2a4e",
+      "title": "Deterministic Template Baseline for RNA 3D Folding",
+      "summary": "A CPU‑only, training‑free solution that transfers known RNA structures via global sequence alignment, refines with physics‑inspired constraints, and outputs five diverse predictions per target.",
+      "task": {
+        "primary": "Ranking",
+        "secondary": []
+      },
+      "modalities": [
+        "Tabular",
+        "Text"
+      ],
+      "metric": "TM-score",
+      "competition": {
+        "slug": "stanford-rna-3d-folding-2",
+        "name": "stanford-rna-3d-folding-2",
+        "endDate": "2026-03-25",
+        "url": "https://www.kaggle.com/competitions/stanford-rna-3d-folding-2"
+      },
+      "result": {
+        "rank": 87,
+        "teams": 1877,
+        "percentile": 4.64,
+        "teamName": "bianfu",
+        "award": null
+      },
+      "status": "emerging",
+      "methods": [
+        "Sequence alignment",
+        "Template transfer",
+        "Constraint‑based refinement"
+      ],
+      "pipeline": {
+        "validation": [],
+        "preprocessing": [
+          {
+            "text": "Parses FASTA files and builds chain segment maps from stoichiometry",
+            "cellRefs": [
+              1
+            ]
+          },
+          {
+            "text": "Loads train/test sequences and labels into DataFrames",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "model": [
+          {
+            "text": "Uses Bio.PairwiseAligner with global alignment and custom gap scores for template similarity search",
+            "cellRefs": [
+              1
+            ]
+          },
+          {
+            "text": "Transfers template coordinates via aligned block mapping and fills gaps with interpolation",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Generates five predictions per test target using seed‑dependent diversity transforms",
+            "cellRefs": [
+              1
+            ]
+          },
+          {
+            "text": "Applies adaptive RNA constraints (bond, angle, smoothing, self‑avoidance) for refinement",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "postprocessing": [
+          {
+            "text": "Clips predicted coordinates to competition limits [-999.999, 9999.999]",
+            "cellRefs": [
+              1
+            ]
+          },
+          {
+            "text": "Formats submission DataFrame with ID, resname, resid and five coordinate sets",
+            "cellRefs": [
+              1
+            ]
+          },
+          {
+            "text": "Writes submission.csv with clipped coordinates",
+            "cellRefs": [
+              1
+            ]
+          }
+        ],
+        "ensembling": []
+      },
+      "evidence": [
+        {
+          "owner": "kami1976",
+          "url": "https://www.kaggle.com/code/kami1976/stanford-rna-3d-folding-part-2a4e",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "e9f6b65ad16de9119e4347a5fb5ee989df9311f229a053237202cf45ef55a307",
+      "sourceRef": "kami1976/stanford-rna-3d-folding-part-2a4e",
+      "sourceRevision": "2026-02-07 08:31:38.180000"
+    },
+    {
+      "id": "stanford-rna-3d-folding-2-kami1976-stanford-rna-3d-folding-part-2a18",
+      "title": "Template-based RNA 3D folding with alignment and refinement",
+      "summary": "Uses pairwise sequence alignment to transfer known structures, then refines with distance constraints and noise.",
+      "task": {
+        "primary": "Ranking",
+        "secondary": []
+      },
+      "modalities": [
+        "Tabular",
+        "Text"
+      ],
+      "metric": "RMSE",
+      "competition": {
+        "slug": "stanford-rna-3d-folding-2",
+        "name": "stanford-rna-3d-folding-2",
+        "endDate": "2026-03-25",
+        "url": "https://www.kaggle.com/competitions/stanford-rna-3d-folding-2"
+      },
+      "result": {
+        "rank": 87,
+        "teams": 1877,
+        "percentile": 4.64,
+        "teamName": "bianfu",
+        "award": null
+      },
+      "status": "emerging",
+      "methods": [
+        "PairwiseAligner",
+        "Adaptive constraints"
+      ],
+      "pipeline": {
+        "validation": [],
+        "preprocessing": [
+          {
+            "text": "Parses FASTA sequences and builds segment maps for train and test sets",
+            "cellRefs": [
+              0
+            ]
+          }
+        ],
+        "model": [
+          {
+            "text": "Uses PairwiseAligner with custom gap scores to find similar RNA sequences",
+            "cellRefs": [
+              0
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Generates five 3D coordinate predictions per test residue via template transfer and refinement",
+            "cellRefs": [
+              0
+            ]
+          }
+        ],
+        "postprocessing": [
+          {
+            "text": "Applies adaptive distance constraints and optional noise to refine predicted coordinates",
+            "cellRefs": [
+              0
+            ]
+          }
+        ],
+        "ensembling": []
+      },
+      "evidence": [
+        {
+          "owner": "kami1976",
+          "url": "https://www.kaggle.com/code/kami1976/stanford-rna-3d-folding-part-2a18",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "3c3b42b5f309b8f0a51f61ac74a4f61afbd3a9c1d02727bebd1545f7210d548d",
+      "sourceRef": "kami1976/stanford-rna-3d-folding-part-2a18",
+      "sourceRevision": "2026-01-31 15:19:36.947000"
+    },
+    {
+      "id": "stanford-rna-3d-folding-2-nadeembinshajahan-rna-3d-protenix-biopython-fix",
+      "title": "RNA 3D Folding Solution using Template-Based Modeling and Protenix",
+      "summary": "Solution combines template-based modeling from known RNA structures with Protenix deep learning inference for remaining targets, followed by ensembling and de-novo fallback to generate submission.",
+      "task": {
+        "primary": "Ranking",
+        "secondary": []
+      },
+      "modalities": [
+        "Tabular",
+        "Text",
+        "Image"
+      ],
+      "metric": "Validation",
+      "competition": {
+        "slug": "stanford-rna-3d-folding-2",
+        "name": "stanford-rna-3d-folding-2",
+        "endDate": "2026-03-25",
+        "url": "https://www.kaggle.com/competitions/stanford-rna-3d-folding-2"
+      },
+      "result": {
+        "rank": 163,
+        "teams": 1877,
+        "percentile": 8.68,
+        "teamName": "Nadeem Mohammed Shajahan",
+        "award": null
+      },
+      "status": "frontier",
+      "methods": [
+        "Template-Based Modeling",
+        "Protenix",
+        "Ensembling"
+      ],
+      "pipeline": {
+        "validation": [],
+        "preprocessing": [
+          {
+            "text": "Loads and combines training and validation data for template pool; processes labels to coordinates; builds segments map",
+            "cellRefs": [
+              6
+            ]
+          }
+        ],
+        "model": [
+          {
+            "text": "Uses Protenix model for inference",
+            "cellRefs": [
+              6
+            ]
+          }
+        ],
+        "training": [],
+        "inference": [
+          {
+            "text": "Runs Protenix inference on test data with chunking for long sequences",
+            "cellRefs": [
+              6
+            ]
+          }
+        ],
+        "postprocessing": [
+          {
+            "text": "Stitches chunk coordinates and formats predictions into submission CSV",
+            "cellRefs": [
+              6
+            ]
+          }
+        ],
+        "ensembling": [
+          {
+            "text": "Combines TBM, Protenix, and de-novo predictions to form final set of 5 samples per target",
+            "cellRefs": [
+              6
+            ]
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "owner": "nadeembinshajahan",
+          "url": "https://www.kaggle.com/code/nadeembinshajahan/rna-3d-protenix-biopython-fix",
+          "version": 1,
+          "cellRefs": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "verified": true
+        }
+      ],
+      "sourceHash": "d0e43e0c5a06c46c042a102f9a0d21e43c91b371d0f7cab37cdfb6a06fb4ba59",
+      "sourceRef": "nadeembinshajahan/rna-3d-protenix-biopython-fix",
+      "sourceRevision": "2026-03-18 18:55:51.397000"
     },
     {
       "id": "llms-you-cant-please-them-all-shivamreturns-7th",
