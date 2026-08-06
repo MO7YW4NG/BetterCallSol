@@ -8,7 +8,6 @@ import csv
 import hashlib
 import io
 import json
-import math
 import os
 import re
 import subprocess
@@ -50,7 +49,12 @@ MODALITIES = ("Tabular", "Image", "Text", "Audio", "Video", "Time Series", "Grap
 TARGET_SOLUTIONS = 30
 MAX_NOTEBOOK_PAGES = 3
 MAX_SOLUTIONS_PER_COMPETITION = 6
+MAX_PERCENTILE = 3.0
 HEURISTIC_SUMMARY_PREFIX = "Notebook code evidence identifies"
+
+
+class LLMCapacityExhausted(RuntimeError):
+    pass
 
 
 def run_kaggle(*args: str, cwd: Path | None = None) -> str:
@@ -170,11 +174,13 @@ def slugify(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
-def list_competitions(cutoff: str) -> list[dict[str, str]]:
+def list_competitions(cutoff: str, max_pages: int | None = 10) -> list[dict[str, str]]:
     found: dict[str, dict[str, str]] = {}
     today = datetime.now(UTC).date().isoformat()
     for category in CATEGORIES:
-        for page in range(1, 11):
+        page = 1
+        seen: set[str] = set()
+        while max_pages is None or page <= max_pages:
             try:
                 raw = run_kaggle(
                     "competitions", "list", "--category", category,
@@ -186,11 +192,21 @@ def list_competitions(cutoff: str) -> list[dict[str, str]]:
             rows = csv_rows(raw)
             if not rows:
                 break
+            fresh = False
+            deadlines: list[str] = []
             for row in rows:
                 slug = competition_slug(field(row, "ref", "slug"))
                 deadline = parse_date(field(row, "deadline", "endDate"))
+                if deadline:
+                    deadlines.append(deadline)
+                if slug and slug not in seen:
+                    seen.add(slug)
+                    fresh = True
                 if slug and cutoff <= deadline < today:
                     found[slug] = {"slug": slug, "name": field(row, "title", "name") or slug, "endDate": deadline}
+            if (deadlines and max(deadlines) < cutoff) or not fresh:
+                break
+            page += 1
     return list(found.values())
 
 
@@ -223,7 +239,7 @@ def read_leaderboard(path: Path) -> list[dict[str, str]]:
 
 def ranked_teams(rows: list[dict[str, str]]) -> dict[str, dict[str, Any]]:
     valid = [row for row in rows if field(row, "teamName", "team", "userName", "username")]
-    limit = max(1, math.ceil(len(valid) * 0.10))
+    limit = int(len(valid) * MAX_PERCENTILE / 100)
     result: dict[str, dict[str, Any]] = {}
     for index, row in enumerate(valid, start=1):
         raw_rank = field(row, "rank", "privateRank", "publicRank", "position")
@@ -249,19 +265,25 @@ def ranked_teams(rows: list[dict[str, str]]) -> dict[str, dict[str, Any]]:
 
 def list_notebooks(
     competition: str,
-    max_pages: int = MAX_NOTEBOOK_PAGES,
+    max_pages: int | None = MAX_NOTEBOOK_PAGES,
     initial: list[dict[str, str]] | None = None,
 ) -> list[dict[str, str]]:
     notebooks: list[dict[str, str]] = list(initial or [])
-    first_page = 1 if initial is None else 2
-    for page in range(first_page, max_pages + 1):
+    seen = {kernel_reference(field(row, "ref", "reference")) for row in notebooks}
+    page = 1 if initial is None else 2
+    while max_pages is None or page <= max_pages:
         rows = csv_rows(run_kaggle(
             "kernels", "list", "--competition", competition, "--kernel-type", "notebook",
             "--sort-by", "voteCount", "--page-size", "100", "-p", str(page), "-v",
         ))
         if not rows:
             break
-        notebooks.extend(rows)
+        fresh = [row for row in rows if kernel_reference(field(row, "ref", "reference")) not in seen]
+        if not fresh:
+            break
+        notebooks.extend(fresh)
+        seen.update(kernel_reference(field(row, "ref", "reference")) for row in fresh)
+        page += 1
     return notebooks
 
 
@@ -409,8 +431,13 @@ def call_openrouter(cells: str, context: str = "") -> dict[str, Any]:
         headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=90) as response:
-        body = json.load(response)
+    try:
+        with urllib.request.urlopen(request, timeout=90) as response:
+            body = json.load(response)
+    except urllib.error.HTTPError as error:
+        if error.code in (402, 429):
+            raise LLMCapacityExhausted(f"OpenRouter HTTP {error.code}") from error
+        raise
     if body.get("error"):
         raise RuntimeError(f"OpenRouter request failed: {body['error'].get('message', 'unknown error')}")
     try:
@@ -507,32 +534,57 @@ def load_existing() -> dict[str, Any]:
     return json.loads(INDEX_PATH.read_text(encoding="utf-8"))
 
 
-def reusable_existing(existing: dict[str, Any], cutoff: str) -> dict[str, dict[str, Any]]:
+def reusable_existing(
+    existing: dict[str, Any], cutoff: str, per_competition_limit: int | None = MAX_SOLUTIONS_PER_COMPETITION
+) -> dict[str, dict[str, Any]]:
     kept: dict[str, dict[str, Any]] = {}
     counts: dict[str, int] = defaultdict(int)
     for item in existing.get("solutions", []):
         if (
             item["competition"]["endDate"] < cutoff
+            or float(item.get("result", {}).get("percentile", 101)) > MAX_PERCENTILE
             or str(item.get("sourceHash", "")).startswith("demo-")
             or str(item.get("summary", "")).startswith(HEURISTIC_SUMMARY_PREFIX)
         ):
             continue
         competition = item["competition"]["slug"]
-        if counts[competition] >= MAX_SOLUTIONS_PER_COMPETITION:
+        if per_competition_limit is not None and counts[competition] >= per_competition_limit:
             continue
         kept[item["id"]] = item
         counts[competition] += 1
     return kept
 
 
-def sync() -> None:
+def write_index(solutions: dict[str, dict[str, Any]], competition_cache: dict[str, Any]) -> int:
+    published = list(solutions.values())
+    assign_statuses(published)
+    published.sort(key=lambda item: (item["competition"]["endDate"], -item["result"]["rank"]), reverse=True)
+    now = datetime.now(UTC)
+    output = {
+        "meta": {
+            "generatedAt": now.isoformat().replace("+00:00", "Z"),
+            "evidenceThrough": now.date().isoformat(),
+            "coverageMonths": 18,
+            "demo": False,
+            "source": "Kaggle CLI and verified notebook evidence",
+            "competitionNotebookCache": competition_cache,
+        },
+        "solutions": published,
+    }
+    temporary = INDEX_PATH.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    temporary.replace(INDEX_PATH)
+    return len(published)
+
+
+def sync(unbounded: bool = False) -> None:
     for required in ("KAGGLE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"):
         if not os.getenv(required):
             raise SystemExit(f"Missing required environment variable: {required}")
 
     cutoff = cutoff_date()
     existing = load_existing()
-    solutions = reusable_existing(existing, cutoff)
+    solutions = reusable_existing(existing, cutoff, None if unbounded else MAX_SOLUTIONS_PER_COMPETITION)
     existing_by_hash = {item["sourceHash"]: item for item in solutions.values() if item.get("sourceHash")}
     existing_by_ref = {
         source_ref: item for item in solutions.values()
@@ -544,8 +596,9 @@ def sync() -> None:
             competition_cache.pop(item["competition"]["slug"], None)
     stats = {"competitions_cached": 0, "cached": 0, "pulled": 0, "published": 0}
 
-    for competition in list_competitions(cutoff):
-        if len(solutions) >= TARGET_SOLUTIONS:
+    capacity_exhausted = False
+    for competition in list_competitions(cutoff, None if unbounded else 10):
+        if capacity_exhausted or (not unbounded and len(solutions) >= TARGET_SOLUTIONS):
             break
         print(f"Scanning {competition['slug']}")
         cache_signature: dict[str, Any] | None = None
@@ -554,13 +607,15 @@ def sync() -> None:
             probe = list_notebooks(competition["slug"], max_pages=1)
             cache_signature = notebook_cache_signature(probe)
             previous_signature = competition_cache.get(competition["slug"])
-            if previous_signature == cache_signature:
+            if not unbounded and previous_signature == cache_signature:
                 stats["competitions_cached"] += 1
                 continue
             if not probe:
                 competition_cache[competition["slug"]] = cache_signature
                 continue
-            notebooks = list_notebooks(competition["slug"], initial=probe)
+            notebooks = list_notebooks(
+                competition["slug"], None if unbounded else MAX_NOTEBOOK_PAGES, initial=probe
+            )
             teams = ranked_teams(leaderboard(competition["slug"]))
             if not teams:
                 raise ValueError("empty ranked leaderboard")
@@ -581,7 +636,9 @@ def sync() -> None:
                 solutions[cached["id"]] = cached
                 stats["cached"] += 1
                 continue
-            if sum(item["competition"]["slug"] == competition["slug"] for item in solutions.values()) >= MAX_SOLUTIONS_PER_COMPETITION:
+            if not unbounded and sum(
+                item["competition"]["slug"] == competition["slug"] for item in solutions.values()
+            ) >= MAX_SOLUTIONS_PER_COMPETITION:
                 continue
             try:
                 with tempfile.TemporaryDirectory() as directory:
@@ -608,6 +665,13 @@ def sync() -> None:
                 existing_by_hash[source_hash] = solution
                 stats["published"] += 1
                 print(f"  published {reference}")
+                if stats["published"] % 10 == 0:
+                    write_index(solutions, competition_cache)
+            except LLMCapacityExhausted as error:
+                print(f"LLM extraction capacity exhausted ({error}); saving completed work.", file=sys.stderr)
+                competition_cacheable = False
+                capacity_exhausted = True
+                break
             except urllib.error.HTTPError as error:
                 if error.code in (400, 401, 402, 403, 429):
                     print("LLM extraction capacity unavailable; deferring remaining notebooks.", file=sys.stderr)
@@ -625,29 +689,14 @@ def sync() -> None:
             ) as error:
                 print(f"  quarantined {reference}: {error}", file=sys.stderr)
                 competition_cacheable = False
-            if len(solutions) >= TARGET_SOLUTIONS:
+            if not unbounded and len(solutions) >= TARGET_SOLUTIONS:
                 break
         if competition_cacheable and cache_signature is not None:
             competition_cache[competition["slug"]] = cache_signature
 
-    published = list(solutions.values())
-    assign_statuses(published)
-    published.sort(key=lambda item: (item["competition"]["endDate"], -item["result"]["rank"]), reverse=True)
-    now = datetime.now(UTC)
-    output = {
-        "meta": {
-            "generatedAt": now.isoformat().replace("+00:00", "Z"),
-            "evidenceThrough": now.date().isoformat(),
-            "coverageMonths": 18,
-            "demo": False,
-            "source": "Kaggle CLI and verified notebook evidence",
-            "competitionNotebookCache": competition_cache,
-        },
-        "solutions": published,
-    }
-    INDEX_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    published_count = write_index(solutions, competition_cache)
     print(
-        f"Sync complete: {len(published)} solutions; "
+        f"Sync complete: {published_count} solutions; "
         f"{stats['published']} published, {stats['cached']} cached, {stats['pulled']} notebooks pulled, "
         f"{stats['competitions_cached']} competitions skipped by notebook cache."
     )
@@ -666,11 +715,16 @@ def self_check() -> None:
         with zipfile.ZipFile(archive_path, "w") as archive:
             archive.writestr("leaderboard.csv", "TeamName,Score\nuser,1.0\n")
         assert read_leaderboard(Path(directory))[0]["TeamName"] == "user"
-    rows = [{"rank": str(rank), "teamName": f"user-{rank}"} for rank in range(1, 21)]
-    assert set(ranked_teams(rows)) == {"user1", "user2"}
-    member_rows = [{"rank": "1", "teamName": "Team One", "TeamMemberUserNames": "alice, bob"}]
-    assert set(ranked_teams(member_rows)) == {"teamone", "alice", "bob"}
-    assert set(ranked_teams([{"teamName": f"user-{rank}"} for rank in range(1, 21)])) == {"user1", "user2"}
+    rows = [{"rank": str(rank), "teamName": f"user-{rank}"} for rank in range(1, 101)]
+    assert set(ranked_teams(rows)) == {"user1", "user2", "user3"}
+    member_rows = [
+        {"rank": "1", "teamName": "Team One", "TeamMemberUserNames": "alice, bob"},
+        *[{"rank": str(rank), "teamName": f"user-{rank}"} for rank in range(2, 35)],
+    ]
+    assert {"teamone", "alice", "bob"} <= set(ranked_teams(member_rows))
+    assert set(ranked_teams([{"teamName": f"user-{rank}"} for rank in range(1, 101)])) == {
+        "user1", "user2", "user3"
+    }
     cells = {1, 3}
     value = {
         "title": "A", "summary": "B", "primaryTask": "Classification", "secondaryTasks": [],
@@ -694,17 +748,24 @@ def self_check() -> None:
     assert all(item["status"] == "frontier" for item in solutions)
     seeded = {
         "solutions": [
-            {"id": "verified", "summary": "Specific evidence", "sourceHash": "abc", "competition": {"slug": "a", "endDate": "2025-03-03"}},
-            {"id": "demo", "summary": "Illustrative", "sourceHash": "demo-card", "competition": {"slug": "b", "endDate": "2026-01-01"}},
-            {"id": "heuristic", "summary": f"{HEURISTIC_SUMMARY_PREFIX} PyTorch", "sourceHash": "def", "competition": {"slug": "c", "endDate": "2026-01-01"}},
+            {"id": "verified", "summary": "Specific evidence", "sourceHash": "abc", "result": {"percentile": 3}, "competition": {"slug": "a", "endDate": "2025-03-03"}},
+            {"id": "demo", "summary": "Illustrative", "sourceHash": "demo-card", "result": {"percentile": 1}, "competition": {"slug": "b", "endDate": "2026-01-01"}},
+            {"id": "heuristic", "summary": f"{HEURISTIC_SUMMARY_PREFIX} PyTorch", "sourceHash": "def", "result": {"percentile": 1}, "competition": {"slug": "c", "endDate": "2026-01-01"}},
         ]
     }
     assert set(reusable_existing(seeded, "2025-02-01")) == {"verified"}
+    many = {"solutions": [
+        {"id": str(index), "summary": "Evidence", "sourceHash": str(index),
+         "result": {"percentile": 1}, "competition": {"slug": "a", "endDate": "2026-01-01"}}
+        for index in range(7)
+    ]}
+    assert len(reusable_existing(many, "2025-02-01", None)) == 7
     print("sync self-check passed")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--self-check", action="store_true")
+    parser.add_argument("--unbounded", action="store_true", help="ignore scan and solution count limits")
     arguments = parser.parse_args()
-    self_check() if arguments.self_check else sync()
+    self_check() if arguments.self_check else sync(arguments.unbounded)
