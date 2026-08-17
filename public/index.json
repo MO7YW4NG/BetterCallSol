@@ -1,7 +1,7 @@
 {
   "meta": {
-    "generatedAt": "2026-08-10T04:52:45.002338Z",
-    "evidenceThrough": "2026-08-10",
+    "generatedAt": "2026-08-17T04:00:43.039020Z",
+    "evidenceThrough": "2026-08-17",
     "coverageMonths": 18,
     "demo": false,
     "source": "Kaggle CLI and verified notebook evidence",
