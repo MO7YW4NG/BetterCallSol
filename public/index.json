@@ -1,7 +1,7 @@
 {
   "meta": {
-    "generatedAt": "2026-09-28T09:42:09.232911Z",
-    "evidenceThrough": "2026-09-28",
+    "generatedAt": "2026-10-05T10:21:46.346515Z",
+    "evidenceThrough": "2026-10-05",
     "coverageMonths": 18,
     "demo": false,
     "source": "Kaggle CLI and verified notebook evidence",
@@ -10370,114 +10370,6 @@
       "sourceHash": "87bf8f823f39a395d6b17137f04c19f2c4d98980d3fd544c8f7f849876fd0cd9",
       "sourceRef": "tomirol/sdxl-turbo-vtracer-sub-0-698-remo",
       "sourceRevision": "2025-05-20 13:06:10.507000"
-    },
-    {
-      "id": "ai-mathematical-olympiad-progress-prize-2-kazama28-aimo2-gemma-tuning-pytorch",
-      "title": "Gemma 2 Fine-tuning for Mathematical Problem Solving",
-      "summary": "This solution fine-tunes a Gemma 2 2B causal language model using LoRA adaptation on a mathematical dataset to generate solutions for olympiad-level problems.",
-      "task": {
-        "primary": "Generation",
-        "secondary": []
-      },
-      "modalities": [
-        "Text"
-      ],
-      "metric": "SparseCategoricalAccuracy",
-      "competition": {
-        "slug": "ai-mathematical-olympiad-progress-prize-2",
-        "name": "ai-mathematical-olympiad-progress-prize-2",
-        "endDate": "2025-04-01",
-        "url": "https://www.kaggle.com/competitions/ai-mathematical-olympiad-progress-prize-2"
-      },
-      "result": {
-        "rank": 53,
-        "teams": 2213,
-        "percentile": 2.39,
-        "teamName": "Piyush Chauhan",
-        "award": null
-      },
-      "status": "emerging",
-      "methods": [
-        "LoRA adaptation",
-        "Prompt templating",
-        "Causal language modeling",
-        "Adam optimization"
-      ],
-      "pipeline": {
-        "validation": [],
-        "preprocessing": [
-          {
-            "text": "Applies prompt templating to format problem-solution pairs",
-            "cellRefs": [
-              6
-            ]
-          }
-        ],
-        "model": [
-          {
-            "text": "Loads Gemma 2 2B causal language model from preset",
-            "cellRefs": [
-              9
-            ]
-          }
-        ],
-        "training": [
-          {
-            "text": "Compiles and trains model with LoRA-enabled Gemma using Adam optimizer and sparse categorical crossentropy",
-            "cellRefs": [
-              10,
-              14
-            ]
-          }
-        ],
-        "inference": [
-          {
-            "text": "Generates solutions for input questions using tuned model with prompt formatting",
-            "cellRefs": [
-              11
-            ]
-          }
-        ],
-        "postprocessing": [
-          {
-            "text": "Applies color highlighting to generated text for Question/Solution/Answer segments",
-            "cellRefs": [
-              8
-            ]
-          }
-        ],
-        "ensembling": []
-      },
-      "evidence": [
-        {
-          "owner": "kazama28",
-          "url": "https://www.kaggle.com/code/kazama28/aimo2-gemma-tuning-pytorch",
-          "version": 1,
-          "cellRefs": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16
-          ],
-          "verified": true
-        }
-      ],
-      "sourceHash": "dd977e2956e5c4bfd6b421ed14aa53cc6fa3176eb3647e41e0cc39c8b4336aa1",
-      "sourceRef": "kazama28/aimo2-gemma-tuning-pytorch",
-      "sourceRevision": "2024-12-22 08:11:55.847000"
     }
   ]
 }
